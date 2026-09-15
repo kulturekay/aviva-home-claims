@@ -1,0 +1,70 @@
+{
+  "caseId": "A",
+  "claimId": "CLM-A-8842",
+  "recordedFrom": "hand-authored to the spec's expected output; re-record live with the golden script (npm run golden A) once ANTHROPIC_API_KEY is set",
+  "returnedDrns": ["DRN-4626921", "DRN-6301360", "DRN-3440138", "DRN-4193511", "DRN-4286647"],
+  "toolCalls": [
+    {
+      "tool": "getAdjusterReport",
+      "args": { "claimId": "CLM-A-8842" },
+      "resultSummary": "recommendation=decline; two ground-level photos, undated, no mortar close-up; priorRepairsObserved=false; causationReasoned=false"
+    },
+    {
+      "tool": "getCustomerContext",
+      "args": { "customerId": "CUST-A" },
+      "resultSummary": "vulnerabilityFlag=false; tenure 9y; 0 prior claims"
+    },
+    {
+      "tool": "findFosPrecedents",
+      "args": { "damageType": "roof_tiles", "tags": ["gusts_vs_mean", "burden_of_proof", "wear_and_tear", "insurer_wrong_on_q1"] },
+      "resultSummary": "5 returned: DRN-4626921, DRN-6301360, DRN-3440138, DRN-4193511, DRN-4286647"
+    }
+  ],
+  "review": {
+    "wordingVersion": "aviva_v8 (Oct 2025, current)",
+    "wordingNote": "The wording in force is aviva_v8, which is discretionary: gusts 'normally' exceeding 55 mph and siting are considered, so gusts in the low-to-mid 50s and above have been treated as storm.",
+    "q1_stormConditions": {
+      "finding": "yes",
+      "evidence": [
+        { "source": "weather", "ref": "Wolverhampton Airfield (3km)", "quote": "maxGust 61mph on 2025-12-09; named storm Bram" },
+        { "source": "wording", "ref": "aviva_v8 stormDefinition", "quote": "persistent high winds with gusts normally exceeding 55mph (48 knots)" }
+      ],
+      "gaps": []
+    },
+    "q2_damageConsistent": {
+      "finding": "yes",
+      "evidence": [
+        { "source": "report", "ref": "CLM-A-8842 narrative", "quote": "ridge tiles displaced with water ingress" }
+      ],
+      "gaps": []
+    },
+    "q3_mainCause": {
+      "finding": "unknown",
+      "evidence": [
+        { "source": "report", "ref": "CLM-A-8842 photos", "quote": "two ground-level photos, undated, no close-up of the mortar bed" },
+        { "source": "precedent", "ref": "DRN-4193511", "quote": "insurer had no photos to discharge burden on gradual-cause exclusion" }
+      ],
+      "gaps": ["no dated close-up of the mortar bed showing failure that pre-dates the event"]
+    },
+    "adjusterReportQuality": {
+      "photosOfCorrectProperty": true,
+      "photosDated": false,
+      "priorRepairsDocumented": false,
+      "causationReasoned": false,
+      "note": "Desk review only; the stated 38 mph understates the recorded 61 mph gusts, and deterioration is asserted without dated evidence of the blamed defect."
+    },
+    "verdict": "disagree_decline",
+    "confidence": "high",
+    "confidenceDrivers": [
+      "recorded gusts of 61 mph far exceed the 38 mph the adjuster relied on",
+      "the insurer has not discharged its Stage 2 burden on the wear-and-tear exclusion",
+      "the only photos are undated and taken from the ground"
+    ],
+    "wouldChangeMind": ["a dated close-up of the mortar bed showing failure that pre-dates 9 December 2025"],
+    "carveOuts": { "temporaryRepairPayable": "likely", "accidentalDamageInternal": "consider" },
+    "consumerDutyChecks": { "vulnerabilityConsidered": true, "cashCriteriaMet": "n/a", "reasonsExplainable": true },
+    "escalate": { "required": false, "to": [], "why": "" },
+    "citedDrns": ["DRN-6301360", "DRN-4626921"],
+    "draftParagraph": "We do not consider the decline defensible on the current evidence. Storm conditions are established: peak gusts of 61 mph at the nearest station on 9 December 2025 (Storm Bram) exceed the wording's 55 mph guide, and displaced ridge tiles with water ingress are storm-consistent. The insurer relies on mortar deterioration but has not discharged its burden: the photos are undated, taken from the ground, and none shows the mortar bed failing before the event. A dated close-up of pre-existing mortar failure would change this. Emergency or temporary repair costs are likely payable."
+  }
+}

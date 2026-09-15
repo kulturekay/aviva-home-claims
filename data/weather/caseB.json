@@ -1,0 +1,12 @@
+{
+  "postcodeDistrict": "EX",
+  "dateOfLoss": "2026-01-28",
+  "window": { "from": "2026-01-28T00:00:00Z", "to": "2026-01-28T23:59:00Z" },
+  "namedStorm": "Chandra",
+  "status": "ok",
+  "stations": [
+    { "name": "Exeter Airport", "distanceKm": 4, "meanWindMph": 22, "maxGustMph": 44, "maxRainMmPerHr": 27, "snowCm": 0 },
+    { "name": "Dunkeswell Aerodrome", "distanceKm": 9, "meanWindMph": 20, "maxGustMph": 41, "maxRainMmPerHr": 24, "snowCm": 0 },
+    { "name": "Chivenor", "distanceKm": 14, "meanWindMph": 19, "maxGustMph": 39, "maxRainMmPerHr": 21, "snowCm": 0 }
+  ]
+}

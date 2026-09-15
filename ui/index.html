@@ -1,0 +1,385 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Storm-claim second-line reviewer</title>
+<style>
+  :root {
+    --bg: #0f1419; --panel: #171e26; --panel2: #1d2731; --line: #2b3742;
+    --ink: #e7edf3; --ink-dim: #9fb0bf; --ink-mute: #6b7d8c;
+    --accent: #4f9cf9;
+    --attention: #e0a43b;      /* disagree_* : the reviewer overturns the adjuster */
+    --attention-bg: #2c2413;
+    --neutral: #4f9cf9;        /* agree_* : defensible, lower scrutiny */
+    --neutral-bg: #12263b;
+    --unresolved: #8a97a3;     /* cannot_determine */
+    --unresolved-bg: #212a32;
+    --good: #56b877; --bad: #e06a6a;
+    --focus: #7fbfff;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--ink);
+    font: 15px/1.5 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
+  a { color: var(--accent); }
+  header { padding: 14px 20px; border-bottom: 1px solid var(--line); display: flex; align-items: baseline; gap: 14px; flex-wrap: wrap; }
+  header h1 { font-size: 16px; margin: 0; font-weight: 650; }
+  header .sub { color: var(--ink-dim); font-size: 13px; }
+  .mode { margin-left: auto; font-size: 12px; color: var(--ink-mute); border: 1px solid var(--line); padding: 3px 8px; border-radius: 999px; }
+  .cases { display: flex; gap: 8px; padding: 14px 20px; flex-wrap: wrap; align-items: center; }
+  .cases .lbl { color: var(--ink-dim); font-size: 13px; margin-right: 4px; }
+  button { font: inherit; cursor: pointer; }
+  .case-btn { background: var(--panel); color: var(--ink); border: 1px solid var(--line); border-radius: 8px; padding: 8px 12px; text-align: left; max-width: 230px; }
+  .case-btn:hover { border-color: var(--accent); }
+  .case-btn[aria-pressed="true"] { border-color: var(--accent); background: var(--neutral-bg); }
+  .case-btn b { display: block; font-size: 13px; }
+  .case-btn span { display: block; color: var(--ink-mute); font-size: 11px; margin-top: 2px; }
+  :focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
+  main { display: grid; grid-template-columns: 360px 1fr; gap: 16px; padding: 0 20px 120px; align-items: start; }
+  @media (max-width: 900px) { main { grid-template-columns: 1fr; } }
+  .panel { background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 14px 16px; margin-bottom: 16px; }
+  .panel h2 { font-size: 12px; text-transform: uppercase; letter-spacing: .06em; color: var(--ink-dim); margin: 0 0 10px; font-weight: 600; }
+  .row { display: flex; gap: 8px; align-items: baseline; margin: 4px 0; }
+  .row .k { color: var(--ink-mute); min-width: 118px; font-size: 13px; }
+  .row .v { color: var(--ink); }
+  .badge { display: inline-block; font-size: 11px; padding: 1px 7px; border-radius: 999px; border: 1px solid var(--line); color: var(--ink-dim); }
+  .badge.on { background: #16321f; color: #9fe0b4; border-color: #285f39; }
+  .badge.off { background: #331a1a; color: #f0adad; border-color: #5f2929; }
+  .photo { border-top: 1px solid var(--line); padding: 8px 0; font-size: 13px; }
+  .photo .desc { color: var(--ink); }
+  .photo .tags { margin-top: 4px; display: flex; gap: 6px; flex-wrap: wrap; }
+  /* decision banner */
+  .banner { border-radius: 10px; padding: 16px; border: 1px solid var(--line); margin-bottom: 16px; }
+  .banner.attention { background: var(--attention-bg); border-color: var(--attention); }
+  .banner.neutral { background: var(--neutral-bg); border-color: var(--neutral); }
+  .banner.unresolved { background: var(--unresolved-bg); border-color: var(--unresolved); }
+  .pill { display: inline-flex; align-items: center; gap: 8px; font-weight: 700; font-size: 15px; padding: 6px 12px; border-radius: 8px; border: 1px solid transparent; }
+  .pill.attention { background: var(--attention); color: #1a1204; }
+  .pill.neutral { background: var(--neutral); color: #05192b; }
+  .pill.unresolved { background: var(--unresolved); color: #10171d; }
+  .banner .headline { font-size: 18px; font-weight: 650; margin: 10px 0 4px; }
+  .banner .action { color: var(--ink-dim); }
+  .compare { display: flex; gap: 10px; margin-top: 12px; flex-wrap: wrap; }
+  .compare .box { flex: 1 1 200px; background: rgba(0,0,0,.2); border: 1px solid var(--line); border-radius: 8px; padding: 8px 10px; }
+  .compare .box .t { font-size: 11px; text-transform: uppercase; letter-spacing: .05em; color: var(--ink-mute); }
+  .q { border-top: 1px solid var(--line); padding: 12px 0; }
+  .q:first-child { border-top: none; }
+  .q .qhead { display: flex; gap: 8px; align-items: baseline; }
+  .q .qhead .qid { font-weight: 650; }
+  .q .finding { font-size: 12px; padding: 1px 8px; border-radius: 999px; border: 1px solid var(--line); color: var(--ink-dim); }
+  .q .finding.yes, .q .finding.storm { color: #9fe0b4; border-color: #285f39; }
+  .q .finding.no, .q .finding.pre_existing { color: #f0adad; border-color: #5f2929; }
+  .q .finding.unknown, .q .finding.borderline, .q .finding.mixed { color: #e6cf97; border-color: #6b5624; }
+  .ev { margin: 6px 0 0 0; padding: 6px 10px; background: var(--panel2); border-left: 3px solid var(--accent); border-radius: 4px; font-size: 13px; }
+  .ev .src { color: var(--ink-mute); font-size: 11px; }
+  .gap { color: #e6cf97; font-size: 13px; margin-top: 4px; }
+  details { border-top: 1px solid var(--line); padding: 8px 0; }
+  details summary { cursor: pointer; color: var(--ink-dim); font-size: 13px; }
+  .kv { font-size: 13px; }
+  .drivers li, .change li { margin: 2px 0; }
+  .trace-item { border-top: 1px solid var(--line); padding: 8px 0; font-size: 13px; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; }
+  .trace-item .tool { color: var(--accent); }
+  .trace-item .args { color: var(--ink-mute); }
+  .guardline { font-size: 12px; color: var(--ink-dim); margin: 2px 0; }
+  .guardline.block { color: #f0adad; }
+  /* action bar */
+  #bar { position: fixed; left: 0; right: 0; bottom: 0; background: var(--panel2); border-top: 1px solid var(--line); padding: 12px 20px; display: none; }
+  #bar.show { display: block; }
+  #bar .reason { color: var(--attention); font-size: 13px; margin-bottom: 8px; }
+  #bar .actions { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+  .btn { border-radius: 8px; padding: 9px 16px; border: 1px solid var(--line); background: var(--panel); color: var(--ink); }
+  .btn.primary { background: var(--accent); color: #05192b; border-color: var(--accent); font-weight: 600; }
+  .btn.primary:disabled { opacity: .45; cursor: not-allowed; }
+  .btn.warn { border-color: var(--attention); color: var(--attention); }
+  .friction { display: flex; align-items: center; gap: 8px; color: var(--ink-dim); font-size: 13px; }
+  .willrecord { color: var(--ink-mute); font-size: 12px; margin-left: 4px; }
+  .form { margin-top: 10px; display: none; gap: 8px; flex-wrap: wrap; align-items: center; }
+  .form.show { display: flex; }
+  .form select, .form textarea, .form input { background: var(--panel); color: var(--ink); border: 1px solid var(--line); border-radius: 6px; padding: 6px 8px; font: inherit; }
+  .form textarea { width: 340px; min-height: 38px; }
+  .done { background: #12241a; border: 1px solid #285f39; color: #bfe9cd; padding: 10px 14px; border-radius: 8px; }
+  .empty, .loading, .error { color: var(--ink-dim); padding: 40px 0; text-align: center; }
+  .error { color: #f0adad; }
+  .steps { display: flex; gap: 8px; justify-content: center; margin-top: 12px; }
+  .step { font-size: 12px; padding: 4px 10px; border-radius: 999px; border: 1px solid var(--line); color: var(--ink-mute); }
+  .step.active { color: var(--accent); border-color: var(--accent); }
+  .skel { height: 12px; background: linear-gradient(90deg, #1d2731, #26333f, #1d2731); border-radius: 6px; margin: 10px 0; animation: sh 1.2s infinite; }
+  @keyframes sh { 0%{opacity:.5} 50%{opacity:1} 100%{opacity:.5} }
+</style>
+</head>
+<body>
+<header>
+  <h1>Storm-claim second-line reviewer</h1>
+  <span class="sub">Reviews a loss adjuster's decline against the Ombudsman's three questions. It reviews a recommendation; it never issues one.</span>
+  <span class="mode" id="mode">mode: ...</span>
+</header>
+
+<nav class="cases" id="cases" aria-label="Case picker"><span class="lbl">Case:</span></nav>
+
+<main>
+  <section class="left" aria-label="Adjuster submission" id="left">
+    <div class="panel"><div class="empty">Pick a case above to run the reviewer.</div></div>
+  </section>
+  <section class="right" aria-label="Reviewer assessment" id="right"></section>
+</main>
+
+<div id="bar" role="region" aria-label="Human decision">
+  <div class="reason" id="barReason"></div>
+  <div class="actions">
+    <button class="btn primary" id="approveBtn">Accept AI assessment</button>
+    <label class="friction" id="frictionWrap" style="display:none">
+      <input type="checkbox" id="readEvidence" /> I have read the quoted evidence
+    </label>
+    <span class="willrecord" id="willRecord"></span>
+    <button class="btn warn" id="overrideBtn">Override</button>
+    <button class="btn" id="escalateBtn">Escalate</button>
+  </div>
+  <div class="form" id="overrideForm">
+    <select id="ovOutcome" aria-label="Replacement outcome">
+      <option value="overturn_decline">Overturn the decline</option>
+      <option value="uphold_decline">Uphold the decline</option>
+      <option value="refer">Refer for more evidence</option>
+    </select>
+    <select id="ovMode" aria-label="Failure mode">
+      <option value="">failure mode...</option>
+      <option value="extraction">extraction</option>
+      <option value="reasoning">reasoning</option>
+      <option value="rules">rules</option>
+    </select>
+    <textarea id="ovReason" placeholder="Reason (required)"></textarea>
+    <button class="btn primary" id="ovSubmit">Record override</button>
+  </div>
+  <div class="form" id="escalateForm">
+    <select id="esTo" aria-label="Escalation destination">
+      <option value="technical_lead">technical_lead</option>
+      <option value="counter_fraud">counter_fraud</option>
+      <option value="complaints">complaints</option>
+    </select>
+    <textarea id="esReason" placeholder="Reason (required)"></textarea>
+    <button class="btn primary" id="esSubmit">Record escalation</button>
+  </div>
+  <div class="done" id="doneMsg" style="display:none"></div>
+</div>
+
+<script>
+const $ = (id) => document.getElementById(id);
+let current = null; // { runId, caseId, payload }
+
+const VERDICT = {
+  disagree_decline: { tone:'attention', label:'Decline NOT defensible', line:"The adjuster's decline is NOT defensible on the evidence.", action:'You are being asked to overturn the decline, or override with a reason.' },
+  disagree_cash:    { tone:'attention', label:'Cash offer NOT defensible', line:"The cash settlement is NOT defensible on the evidence.", action:'You are being asked to overturn the cash offer, or override with a reason.' },
+  agree_decline:    { tone:'neutral', label:'Decline defensible', line:"The adjuster's decline is defensible.", action:'You are being asked to uphold the decline. A decline is customer-adverse, so read the evidence before signing.' },
+  agree_cash:       { tone:'neutral', label:'Cash offer defensible', line:"The cash settlement is defensible.", action:'You are being asked to uphold the cash offer.' },
+  cannot_determine: { tone:'unresolved', label:'Cannot be judged from the file', line:'This cannot be judged from the evidence on file.', action:'You are being asked to decide next steps given the evidence gap.' },
+};
+
+function esc(s){ return String(s ?? '').replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
+
+async function loadCases(){
+  const r = await fetch('/cases'); const d = await r.json();
+  $('mode').textContent = 'mode: ' + d.mode;
+  const nav = $('cases');
+  for (const c of d.cases){
+    const b = document.createElement('button');
+    b.className = 'case-btn'; b.setAttribute('aria-pressed','false');
+    b.innerHTML = '<b>Case '+esc(c.id)+': '+esc(c.title)+'</b><span>'+esc(c.summary.slice(0,90))+'...</span>';
+    b.onclick = () => runCase(c.id, b);
+    nav.appendChild(b);
+  }
+}
+
+function setActive(btn){
+  document.querySelectorAll('.case-btn').forEach(b => b.setAttribute('aria-pressed','false'));
+  if (btn) btn.setAttribute('aria-pressed','true');
+}
+
+function showRunning(){
+  $('right').innerHTML = '<div class="panel"><div class="loading">Running the reviewer...'
+    + '<div class="steps"><span class="step active">prefetch</span><span class="step">investigate</span><span class="step">guard</span><span class="step">gate</span></div>'
+    + '<div class="skel" style="width:80%;margin:20px auto 0"></div><div class="skel" style="width:60%;margin:10px auto"></div></div></div>';
+  $('left').innerHTML = '<div class="panel"><div class="skel"></div><div class="skel" style="width:70%"></div><div class="skel" style="width:50%"></div></div>';
+  $('bar').classList.remove('show');
+}
+
+async function runCase(caseId, btn){
+  setActive(btn); showRunning();
+  let d;
+  try { const r = await fetch('/run/'+caseId, { method:'POST' }); d = await r.json(); }
+  catch (e) { $('right').innerHTML = '<div class="panel"><div class="error">Could not reach the server. '+esc(e.message)+'</div></div>'; return; }
+  if (d.status === 'failed' || (!d.review && d.status !== 'suspended')){
+    renderLeft(d.left);
+    $('right').innerHTML = '<div class="panel"><div class="error">The review could not be produced, so it was sent to a human.<br>'+esc(d.error||d.suspendReason||'')+'</div></div>';
+    // still allow a human decision if suspended
+  }
+  current = { runId: d.runId, caseId, payload: d };
+  renderLeft(d.left);
+  renderRight(d);
+  if (d.status === 'suspended') renderBar(d);
+}
+
+function renderLeft(left){
+  if (!left){ $('left').innerHTML=''; return; }
+  const rep = left.report || {}; const cust = left.customer || {}; const w = left.weather || {}; const wd = left.wording || {};
+  const photos = (rep.photos||[]).map(p =>
+    '<div class="photo"><div class="desc">'+esc(p.description)+'</div><div class="tags">'
+    + '<span class="badge">'+esc(p.taken)+'</span>'
+    + '<span class="badge '+(p.dated?'on':'off')+'">'+(p.dated?'dated':'undated')+'</span>'
+    + '<span class="badge '+(p.exifPresent?'on':'off')+'">'+(p.exifPresent?'EXIF':'no EXIF')+'</span>'
+    + (p.showsPriorRepair?'<span class="badge on">prior repair</span>':'')
+    + '</div></div>').join('');
+  const ge = rep.guardEvents || {};
+  const guardNote = (ge.injectionRemoved && ge.injectionRemoved.length)
+    ? '<div class="guardline">injectionGuard removed '+ge.injectionRemoved.length+' instruction-shaped fragment(s) from the narrative</div>' : '';
+  $('left').innerHTML =
+    '<div class="panel"><h2>Adjuster recommendation</h2>'
+    + '<div class="row"><span class="k">Recommendation</span><span class="v"><b>'+esc(rep.recommendation)+'</b></span></div>'
+    + '<div class="row"><span class="k">Stated reason</span><span class="v">'+esc(rep.statedReason)+'</span></div>'
+    + '<div class="row"><span class="k">Author</span><span class="v">'+esc(rep.author?.type)+' - '+esc(rep.author?.firm)+'</span></div>'
+    + '<div class="row"><span class="k">Prior repairs seen</span><span class="v">'+(rep.priorRepairsObserved?'yes':'no')+'</span></div>'
+    + '<div class="row"><span class="k">Causation reasoned</span><span class="v">'+(rep.causationReasoned?'yes':'no')+'</span></div>'
+    + (rep.customerEmergencyRepairCost?('<div class="row"><span class="k">Emergency repair paid</span><span class="v">'+esc(rep.customerEmergencyRepairCost)+' GBP</span></div>'):'')
+    + '<details><summary>Narrative (sanitized, untrusted evidence)</summary><div class="kv" style="margin-top:6px">'+esc(rep.narrative)+'</div></details>'
+    + guardNote
+    + '</div>'
+    + '<div class="panel"><h2>Photos</h2>'+(photos||'<div class="kv">none</div>')+'</div>'
+    + '<div class="panel"><h2>Policy and customer</h2>'
+    + '<div class="row"><span class="k">Wording</span><span class="v">'+esc(wd.version)+' ('+(wd.discretionary?'discretionary':'hard threshold')+')</span></div>'
+    + '<div class="row"><span class="k">Vulnerability</span><span class="v">'+(cust.vulnerabilityFlag?('<span class="badge off">flagged'+(cust.vulnerabilityCategory?': '+esc(cust.vulnerabilityCategory):'')+'</span>'):'<span class="badge">none</span>')+'</span></div>'
+    + '<div class="row"><span class="k">Tenure</span><span class="v">'+esc(cust.tenureYears)+' yrs, '+esc(cust.priorClaims)+' prior claims</span></div>'
+    + '<div class="row"><span class="k">Weather</span><span class="v">'+(w.status==='unavailable'?('<span class="badge off">unavailable: '+esc(w.reason)+'</span>'):('named storm '+esc(w.namedStorm||'none')+', '+((w.stations||[]).length)+' stations'))+'</span></div>'
+    + '</div>';
+}
+
+function findingBlock(id, title, f){
+  if (!f) return '';
+  const ev = (f.evidence||[]).map(e => '<div class="ev">'+esc(e.quote)+'<div class="src">'+esc(e.source)+' : '+esc(e.ref)+'</div></div>').join('');
+  const gaps = (f.gaps||[]).map(g => '<div class="gap">gap: '+esc(g)+'</div>').join('');
+  return '<div class="q"><div class="qhead"><span class="qid">'+id+'</span><span class="finding '+esc(f.finding)+'">'+esc(f.finding)+'</span><span class="kv" style="color:var(--ink-dim)">'+title+'</span></div>'+ev+gaps+'</div>';
+}
+
+function renderRight(d){
+  const rev = d.review;
+  if (!rev){ if(d.status!=='failed') $('right').innerHTML = '<div class="panel"><div class="error">No structured review available. Sent to a human.</div></div>'; return; }
+  const v = VERDICT[rev.verdict] || { tone:'unresolved', label: rev.verdict, line: rev.verdict, action:'' };
+  const rec = d.left?.report?.recommendation || 'decline';
+  const banner =
+    '<div class="banner '+v.tone+'">'
+    + '<span class="pill '+v.tone+'">'+esc(v.label)+'</span>'
+    + '<span class="badge" style="margin-left:8px">confidence: '+esc(rev.confidence)+'</span>'
+    + '<div class="headline">'+esc(v.line)+'</div>'
+    + '<div class="action">'+esc(v.action)+'</div>'
+    + '<div class="compare"><div class="box"><div class="t">Adjuster</div>'+esc(rec)+'</div>'
+    + '<div class="box"><div class="t">Reviewer</div>'+esc(rev.verdict)+'</div></div>'
+    + '</div>';
+
+  const guard = d.guard || {};
+  const guardLines = '<div class="panel"><h2>Guards</h2>'
+    + '<div class="guardline">precedentGuard: '+(guard.precedent?.ok?'ok (every cited DRN was returned this run)':'BLOCKED')+'</div>'
+    + '<div class="guardline">scopeGuard: '+(guard.scope?.ok?'ok (verdict is a review value, never an action)':'BLOCKED')+(guard.scope?.warnings?.length?' - '+esc(guard.scope.warnings.join('; ')):'')+'</div>'
+    + (guard.blocked?'<div class="guardline block">BLOCKED: '+esc(guard.blockReason)+'</div>':'')
+    + '<div class="guardline">no outbound network: the agent has private data and reads untrusted text, so it cannot send. This is the headline control.</div>'
+    + '</div>';
+
+  const quality = rev.adjusterReportQuality || {};
+  const drivers = (rev.confidenceDrivers||[]).map(x=>'<li>'+esc(x)+'</li>').join('');
+  const change = (rev.wouldChangeMind||[]).map(x=>'<li>'+esc(x)+'</li>').join('');
+  const cited = (rev.citedDrns||[]).length ? (rev.citedDrns||[]).map(esc).join(', ') : 'none';
+
+  const trace = (d.toolCalls||[]).map(t =>
+    '<div class="trace-item"><span class="tool">'+esc(t.tool)+'</span> <span class="args">'+esc(JSON.stringify(t.args))+'</span><div class="kv" style="color:var(--ink-mute)">'+esc(t.resultSummary||'')+'</div></div>').join('');
+
+  $('right').innerHTML =
+    banner
+    + '<div class="panel"><h2>Ombudsman questions</h2>'
+    + findingBlock('Q1','storm conditions occurred?', rev.q1_stormConditions)
+    + findingBlock('Q2','damage of a storm kind?', rev.q2_damageConsistent)
+    + findingBlock('Q3','storm the main cause?', rev.q3_mainCause)
+    + '</div>'
+    + guardLines
+    + '<div class="panel"><h2>Draft paragraph for the handler</h2><div class="kv">'+esc(rev.draftParagraph)+'</div></div>'
+    + '<div class="panel"><h2>Why this confidence</h2><ul class="drivers">'+drivers+'</ul>'
+    + '<h2 style="margin-top:12px">Would change my mind</h2><ul class="change">'+change+'</ul></div>'
+    + '<div class="panel">'
+    + '<details open><summary>Report quality, carve-outs, Consumer Duty, citations</summary>'
+    + '<div class="row"><span class="k">Photos dated</span><span class="v">'+(quality.photosDated?'yes':'no')+'</span></div>'
+    + '<div class="row"><span class="k">Correct property</span><span class="v">'+(quality.photosOfCorrectProperty?'yes':'no')+'</span></div>'
+    + '<div class="row"><span class="k">Prior repairs documented</span><span class="v">'+(quality.priorRepairsDocumented?'yes':'no')+'</span></div>'
+    + '<div class="row"><span class="k">Causation reasoned</span><span class="v">'+(quality.causationReasoned?'yes':'no')+'</span></div>'
+    + '<div class="row"><span class="k">Temp repair payable</span><span class="v">'+esc(rev.carveOuts?.temporaryRepairPayable)+'</span></div>'
+    + '<div class="row"><span class="k">Internal accidental</span><span class="v">'+esc(rev.carveOuts?.accidentalDamageInternal)+'</span></div>'
+    + '<div class="row"><span class="k">Cash criteria met</span><span class="v">'+esc(rev.consumerDutyChecks?.cashCriteriaMet)+'</span></div>'
+    + '<div class="row"><span class="k">Escalate</span><span class="v">'+(rev.escalate?.required?('yes: '+esc((rev.escalate.to||[]).join(', '))):'no')+'</span></div>'
+    + '<div class="row"><span class="k">Cited DRNs</span><span class="v">'+cited+'</span></div>'
+    + '<div class="row"><span class="k">Produced by</span><span class="v">'+esc(d.modelUsed||'')+'</span></div>'
+    + '</details></div>'
+    + '<div class="panel"><h2>Tool-call trace</h2>'+(trace||'<div class="kv">none</div>')+'</div>';
+}
+
+function willRecordText(rev){
+  const v = rev.verdict;
+  if (v==='disagree_decline') return 'Records: decline recommendation NOT upheld (AI assessment accepted).';
+  if (v==='agree_decline') return 'Records: decline recommendation upheld.';
+  if (v==='disagree_cash') return 'Records: cash offer NOT upheld.';
+  if (v==='agree_cash') return 'Records: cash offer upheld.';
+  return 'Records: cannot determine from the file; referred.';
+}
+
+function renderBar(d){
+  const rev = d.review;
+  // Restore the interactive bar in case a previous case was filed (which hid it).
+  $('doneMsg').style.display = 'none';
+  document.querySelector('#bar .actions').style.display = 'flex';
+  $('barReason').style.display = 'block';
+  $('barReason').textContent = 'Suspended for a human: ' + (d.suspendReason||'');
+  $('bar').classList.add('show');
+  $('overrideForm').classList.remove('show'); $('escalateForm').classList.remove('show');
+  const needsFriction = rev && (String(rev.verdict).startsWith('disagree') || rev.verdict==='cannot_determine' || rev.confidence!=='high');
+  $('frictionWrap').style.display = needsFriction ? 'flex' : 'none';
+  $('readEvidence').checked = false;
+  $('willRecord').textContent = rev ? willRecordText(rev) : '';
+  $('approveBtn').disabled = needsFriction;
+}
+
+$('readEvidence').addEventListener('change', e => { $('approveBtn').disabled = !e.target.checked; });
+$('overrideBtn').onclick = () => { $('overrideForm').classList.toggle('show'); $('escalateForm').classList.remove('show'); };
+$('escalateBtn').onclick = () => { $('escalateForm').classList.toggle('show'); $('overrideForm').classList.remove('show'); };
+
+async function resume(body){
+  if (!current) return;
+  const r = await fetch('/resume/'+current.runId, { method:'POST', headers:{'content-type':'application/json'}, body: JSON.stringify(body) });
+  const d = await r.json();
+  if (d.error){ $('barReason').textContent = 'Error: '+d.error; return; }
+  lockAndShowDone(d);
+}
+
+function lockAndShowDone(d){
+  // Hide the interactive controls without destroying them, so picking another
+  // case can restore the bar (see renderBar).
+  document.querySelector('#bar .actions').style.display = 'none';
+  $('barReason').style.display = 'none';
+  $('overrideForm').classList.remove('show'); $('escalateForm').classList.remove('show');
+  const dm = $('doneMsg');
+  dm.innerHTML = 'Filed. Decision: <b>'+esc(d.decision)+'</b>. Run '+esc(d.runId)+' recorded to the audit log ('+esc(d.audit?.decision||d.decision)+'). The action bar is locked. Pick another case to continue.';
+  dm.style.display = 'block';
+  $('bar').classList.add('show');
+}
+
+$('approveBtn').onclick = () => {
+  const rev = current?.payload?.review;
+  resume({ decision:'approve', reason:'Accepted AI assessment: '+(rev? (VERDICT[rev.verdict]?.label||rev.verdict):'') });
+};
+$('ovSubmit').onclick = () => {
+  const reason = $('ovReason').value.trim(); const mode = $('ovMode').value; const outcome = $('ovOutcome').value;
+  if (!reason || !mode){ $('barReason').textContent = 'Override needs a reason and a failure mode.'; return; }
+  resume({ decision:'override', reason: outcome+': '+reason, failureMode: mode, domainNote: outcome });
+};
+$('esSubmit').onclick = () => {
+  const reason = $('esReason').value.trim(); const to = $('esTo').value;
+  if (!reason){ $('barReason').textContent = 'Escalation needs a reason.'; return; }
+  resume({ decision:'escalate', reason: 'to '+to+': '+reason, domainNote: to });
+};
+
+loadCases();
+</script>
+</body>
+</html>

@@ -1,0 +1,10 @@
+{
+  "id": "directline_0925",
+  "brand": "Direct Line",
+  "version": "0925",
+  "effectiveFrom": "2025-09-01",
+  "discretionary": false,
+  "stormDefinition": "A storm is a period of violent weather which can have: minimum wind speeds of 48 knots or 55 mph (or storm force 10 on the Beaufort scale); torrential rainfall at a rate of at least 25mm per hour; snow to a depth of at least one foot (30 cm) in 24 hours; hail of such intensity that it causes damage to hard surfaces or breaks glass. Well-maintained homes are unlikely to be damaged by weather less violent than a storm.",
+  "exclusions": ["fences, gates and hedges", "wear and tear", "gradual deterioration", "lack of maintenance", "frost"],
+  "cashSettlementClause": "If we are able to repair or replace your property but agree to settle using cash or a voucher we will only pay you what it would have cost us to repair, rebuild or replace it."
+}

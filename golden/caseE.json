@@ -1,0 +1,57 @@
+{
+  "caseId": "E",
+  "claimId": "CLM-E-7310",
+  "recordedFrom": "hand-authored to the spec's expected output; re-record live with the golden script (npm run golden E) once ANTHROPIC_API_KEY is set",
+  "returnedDrns": [],
+  "toolCalls": [
+    {
+      "tool": "getAdjusterReport",
+      "args": { "claimId": "CLM-E-7310" },
+      "resultSummary": "recommendation=decline; two ground-level photos, undated; no local weather corroboration obtained; priorRepairsObserved=false; causationReasoned=false"
+    }
+  ],
+  "review": {
+    "wordingVersion": "aviva_v8 (Oct 2025, current)",
+    "wordingNote": "aviva_v8 is discretionary, but the wording cannot be applied to Q1 without weather data for the postcode, and none is available.",
+    "q1_stormConditions": {
+      "finding": "unknown",
+      "evidence": [
+        { "source": "weather", "ref": "postcode LD on 2025-12-09", "quote": "status: unavailable - no station within 15 km" }
+      ],
+      "gaps": ["no weather report for the postcode district; a named storm nationally is not proof of conditions at this postcode"]
+    },
+    "q2_damageConsistent": {
+      "finding": "yes",
+      "evidence": [
+        { "source": "report", "ref": "CLM-E-7310 narrative", "quote": "ridge tile displacement and water ingress" }
+      ],
+      "gaps": []
+    },
+    "q3_mainCause": {
+      "finding": "unknown",
+      "evidence": [
+        { "source": "report", "ref": "CLM-E-7310 photos", "quote": "two ground-level photos, undated" }
+      ],
+      "gaps": ["cannot separate storm from pre-existing cause without confirming storm conditions"]
+    },
+    "adjusterReportQuality": {
+      "photosOfCorrectProperty": true,
+      "photosDated": false,
+      "priorRepairsDocumented": false,
+      "causationReasoned": false,
+      "note": "The decline treats the damage as maintenance-related, but with no weather data and only undated ground-level photos, neither storm nor deterioration is evidenced."
+    },
+    "verdict": "cannot_determine",
+    "confidence": "low",
+    "confidenceDrivers": [
+      "the weather source is unavailable, so Q1 cannot be answered from the file",
+      "a national named storm is not proof of conditions at this postcode"
+    ],
+    "wouldChangeMind": ["a weather report for the postcode district", "a dated close-up of the displaced ridge tiles"],
+    "carveOuts": { "temporaryRepairPayable": "n/a", "accidentalDamageInternal": "n/a" },
+    "consumerDutyChecks": { "vulnerabilityConsidered": true, "cashCriteriaMet": "n/a", "reasonsExplainable": false },
+    "escalate": { "required": false, "to": [], "why": "" },
+    "citedDrns": [],
+    "draftParagraph": "We cannot judge this decline on the current file. There is no weather report for the postcode district (no station within 15 km), and a named storm at national level is not proof of storm conditions at this address, so Q1 is unknown and we will not infer wind speed. The damage is of a storm-consistent kind, but without confirming the storm we cannot say whether it was the main cause. A weather report for the postcode, or a dated close-up of the displaced tiles, would let us reach a view. Referred to a human to decide next steps."
+  }
+}

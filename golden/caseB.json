@@ -1,0 +1,65 @@
+{
+  "caseId": "B",
+  "claimId": "CLM-B-9021",
+  "recordedFrom": "hand-authored to the spec's expected output; re-record live with the golden script (npm run golden B) once ANTHROPIC_API_KEY is set",
+  "returnedDrns": ["DRN-4885234", "DRN-4997488", "DRN-5633467", "DRN-5925182", "DRN-6301360"],
+  "toolCalls": [
+    {
+      "tool": "getAdjusterReport",
+      "args": { "claimId": "CLM-B-9021" },
+      "resultSummary": "recommendation=decline; six dated photos: ponding, sagging decking, prior bitumen patch, moss; priorRepairsObserved=true; causationReasoned=true; customer paid 680 GBP emergency tarpaulin"
+    },
+    {
+      "tool": "findFosPrecedents",
+      "args": { "damageType": "flat_roof", "tags": ["ponding", "decking", "patch_repairs", "gradual_deterioration", "temporary_repair"] },
+      "resultSummary": "5 returned: DRN-4885234, DRN-4997488, DRN-5633467, DRN-5925182, DRN-6301360"
+    }
+  ],
+  "review": {
+    "wordingVersion": "aviva_v8 (Oct 2025, current)",
+    "wordingNote": "aviva_v8 is discretionary and includes a rainfall limb of at least 25mm per hour; the nearest station recorded 27mm/hr, so the rainfall limb of the storm test is met even though gusts were below 55mph.",
+    "q1_stormConditions": {
+      "finding": "yes",
+      "evidence": [
+        { "source": "weather", "ref": "Exeter Airport (4km)", "quote": "maxRain 27mm/hr on 2026-01-28; named storm Chandra" },
+        { "source": "wording", "ref": "aviva_v8 stormDefinition", "quote": "heavy rainfall at a rate of at least 25mm per hour" }
+      ],
+      "gaps": []
+    },
+    "q2_damageConsistent": {
+      "finding": "no",
+      "evidence": [
+        { "source": "report", "ref": "CLM-B-9021 photos", "quote": "ponding, sagging decking, prior bitumen patch repair, moss along the upstand" },
+        { "source": "precedent", "ref": "DRN-4885234", "quote": "decking failure not consistent with a one-off event" }
+      ],
+      "gaps": []
+    },
+    "q3_mainCause": {
+      "finding": "pre_existing",
+      "evidence": [
+        { "source": "report", "ref": "CLM-B-9021 narrative", "quote": "covering had reached the end of its serviceable life and was already failing; rainfall revealed rather than caused the ingress" }
+      ],
+      "gaps": []
+    },
+    "adjusterReportQuality": {
+      "photosOfCorrectProperty": true,
+      "photosDated": true,
+      "priorRepairsDocumented": true,
+      "causationReasoned": true,
+      "note": "A properly evidenced field report: six dated photos of the defect, a prior patch repair documented, and causation reasoned. The insurer has discharged its burden."
+    },
+    "verdict": "agree_decline",
+    "confidence": "high",
+    "confidenceDrivers": [
+      "six dated photos show ponding, a prior patch repair and moss, evidencing gradual failure",
+      "causation is reasoned and the defect pre-dates the event",
+      "the insurer has discharged its Stage 2 burden on the deterioration exclusion"
+    ],
+    "wouldChangeMind": ["dated evidence that the decking was sound shortly before 28 January 2026"],
+    "carveOuts": { "temporaryRepairPayable": "likely", "accidentalDamageInternal": "consider" },
+    "consumerDutyChecks": { "vulnerabilityConsidered": true, "cashCriteriaMet": "n/a", "reasonsExplainable": true },
+    "escalate": { "required": false, "to": [], "why": "" },
+    "citedDrns": ["DRN-4885234", "DRN-4997488"],
+    "draftParagraph": "The decline is defensible. A storm is made out on the rainfall limb (27 mm/hr on 28 January 2026, Storm Chandra), but the damage is not storm-consistent: six dated photos show ponding, a sagging deck, an existing bitumen patch and moss, and causation is reasoned, so the covering was already failing and the rain revealed it (compare DRN-4885234). The insurer has discharged its burden. Two carve-outs remain: the 680 GBP emergency tarpaulin the customer paid is likely payable (compare DRN-4997488), and any internal water damage should be considered under accidental damage cover."
+  }
+}

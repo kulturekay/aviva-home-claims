@@ -1,0 +1,172 @@
+[
+  {
+    "drn": "DRN-4286647",
+    "insurer": "Aviva",
+    "damageType": "roof_tiles",
+    "facts": "Hip tiles displaced onto a flat roof. A storm in Feb 2022 was accepted; no storm around the Apr 2022 date.",
+    "weatherCited": "storm Feb 2022 accepted; none Apr 2022",
+    "outcome": "upheld",
+    "decisiveFact": "The corner tile loss was storm damage; later slipped tiles fall under accidental damage cover.",
+    "tags": ["roof_tiles", "hip_tiles", "storm_threshold_discretionary", "accidental_damage"]
+  },
+  {
+    "drn": "DRN-4193511",
+    "insurer": "Aviva",
+    "damageType": "wall",
+    "facts": "Boundary wall failure with gusts around 63 mph recorded.",
+    "weatherCited": "~63 mph",
+    "outcome": "upheld",
+    "decisiveFact": "The insurer had no photographs to discharge its burden on the gradual-cause exclusion.",
+    "tags": ["wall", "burden_of_proof", "no_photos", "gradual_cause_exclusion"]
+  },
+  {
+    "drn": "DRN-4885234",
+    "insurer": "Aviva",
+    "damageType": "flat_roof",
+    "facts": "Flat roof puddling and sagging decking; a storm in the prior 6 weeks was accepted.",
+    "weatherCited": "storm in prior 6 weeks accepted",
+    "outcome": "not_upheld",
+    "decisiveFact": "Decking failure was not consistent with a one-off event; it was gradual.",
+    "tags": ["flat_roof", "decking", "ponding", "gradual_deterioration", "not_one_off_event"]
+  },
+  {
+    "drn": "DRN-4997488",
+    "insurer": "Aviva",
+    "damageType": "roof_tiles",
+    "facts": "Ridge tiles with deteriorated mortar; storm confirmed on the date.",
+    "weatherCited": "storm confirmed",
+    "outcome": "upheld_in_part",
+    "decisiveFact": "Decline was fair, but 1,100 GBP emergency temporary repair was payable plus 8 percent interest.",
+    "tags": ["roof_tiles", "ridge_tiles", "mortar", "temporary_repair", "emergency_repair", "upheld_in_part"]
+  },
+  {
+    "drn": "DRN-5115402",
+    "insurer": "AA",
+    "damageType": "roof_tiles",
+    "facts": "Hip tiles; the surveyor photographed a neighbour's roof. 52 mph gust against a 55 mph policy figure was treated as storm.",
+    "weatherCited": "52 mph (policy 55) treated as storm",
+    "outcome": "not_upheld",
+    "decisiveFact": "The insurer's own images showed mortar cracking and the roofer gave no causation opinion.",
+    "tags": ["roof_tiles", "hip_tiles", "wrong_property_photos", "mortar", "no_causation_opinion", "storm_threshold_discretionary"]
+  },
+  {
+    "drn": "DRN-5267120",
+    "insurer": "Aviva",
+    "damageType": "valley",
+    "facts": "Roof valley failure. 50 mph gust against wording requiring 'at least 48 knots'.",
+    "weatherCited": "50 mph vs 'at least 48 knots'",
+    "outcome": "not_upheld",
+    "decisiveFact": "Hard-threshold wording applied; there were poor historical repairs anyway.",
+    "tags": ["valley", "roof", "hard_threshold", "prior_repairs"]
+  },
+  {
+    "drn": "DRN-5253224",
+    "insurer": "UKI",
+    "damageType": "roof_leak",
+    "facts": "Roof leak; the policy contained no storm definition. 32 mph and 4.3 mm/hr recorded.",
+    "weatherCited": "32 mph / 4.3 mm/hr",
+    "outcome": "not_upheld",
+    "decisiveFact": "The Ombudsman cross-checked named storms and the nearest station and cited Beaufort F9 at 47 mph.",
+    "tags": ["roof_leak", "named_storm_cross_check", "nearest_station", "no_storm_definition"]
+  },
+  {
+    "drn": "DRN-5633467",
+    "insurer": "Aviva",
+    "damageType": "valley",
+    "facts": "Valley cement failure after flash rain, below the storm definition.",
+    "weatherCited": "below definition",
+    "outcome": "not_upheld",
+    "decisiveFact": "Two contractors found old cracked cement.",
+    "tags": ["valley", "gradual_deterioration", "prior_repairs", "below_definition"]
+  },
+  {
+    "drn": "DRN-5580631",
+    "insurer": "Aviva",
+    "damageType": "wall",
+    "facts": "Wall collapse; elderly and disabled policyholders. Wind below threshold.",
+    "weatherCited": "below threshold",
+    "outcome": "not_upheld",
+    "decisiveFact": "Vegetation 'sail effect' was wear and tear; a prompt surveyor visit respected the vulnerability.",
+    "tags": ["wall", "fence_exclusion", "wear_and_tear", "vulnerability", "sail_effect"]
+  },
+  {
+    "drn": "DRN-5720593",
+    "insurer": "Aviva",
+    "damageType": "cash_settlement",
+    "facts": "Cash settlement following a fire.",
+    "weatherCited": "n/a",
+    "outcome": "upheld",
+    "decisiveFact": "A cash-only offer must be at the customer's contractor rates, not the insurer's network rates.",
+    "tags": ["cash_settlement", "network_rates", "customer_rates"]
+  },
+  {
+    "drn": "DRN-5925182",
+    "insurer": "Aviva",
+    "damageType": "flat_roof",
+    "facts": "Flat roof and skylight leak; the storm was not disputed.",
+    "weatherCited": "storm not disputed",
+    "outcome": "not_upheld",
+    "decisiveFact": "There was no visible storm-consistent damage.",
+    "tags": ["flat_roof", "skylight", "no_storm_consistent_damage", "q2_no"]
+  },
+  {
+    "drn": "DRN-6238393",
+    "insurer": "Intact/UKI",
+    "damageType": "wall",
+    "facts": "Retaining wall failure. 56 mph and 49 mm on one day, 51 mph and 57 mm on another.",
+    "weatherCited": "56 mph + 49 mm; 51 mph + 57 mm",
+    "outcome": "upheld",
+    "decisiveFact": "The surveyor relied on Google images and gave inconsistent reasons.",
+    "tags": ["wall", "google_images", "inconsistent_reasons", "provenance"]
+  },
+  {
+    "drn": "DRN-6301360",
+    "insurer": "UKI",
+    "damageType": "conservatory",
+    "facts": "Conservatory flashing. Mean wind 24 mph but gust 67 mph.",
+    "weatherCited": "mean 24 mph; gust 67 mph",
+    "outcome": "not_upheld",
+    "decisiveFact": "The storm existed (the insurer was wrong on Q1) but the photos showed patch repairs, moss and torn felt.",
+    "tags": ["conservatory", "gusts_vs_mean", "insurer_wrong_on_q1", "patch_repairs", "moss", "pre_existing", "q3_pre_existing"]
+  },
+  {
+    "drn": "DRN-6229208",
+    "insurer": "UKI",
+    "damageType": "roof_leak",
+    "facts": "Roof leak, Nov 2025. Max 25 mph and 11.9 mm/hr.",
+    "weatherCited": "max 25 mph; 11.9 mm/hr",
+    "outcome": "not_upheld",
+    "decisiveFact": "Q1 was no; a pixelated screenshot was rejected; internal damage was paid under accidental damage.",
+    "tags": ["roof_leak", "q1_no", "pixelated_screenshot", "provenance", "accidental_damage"]
+  },
+  {
+    "drn": "DRN-4626921",
+    "insurer": "AXA",
+    "damageType": "roof_tiles",
+    "facts": "Decline on the basis of 'no storm at the stations'; the point was contested.",
+    "weatherCited": "contested",
+    "outcome": "upheld",
+    "decisiveFact": "The complaint handler's roof-failure theory was not expert evidence.",
+    "tags": ["roof", "roof_tiles", "no_storm_at_stations", "not_expert_evidence", "burden_of_proof", "insurer_wrong_on_q1"]
+  },
+  {
+    "drn": "DRN-3820848",
+    "insurer": "esure",
+    "damageType": "fence",
+    "facts": "Wall and fence failure attributed to a 'sail' effect. Gusts of 83 mph.",
+    "weatherCited": "83 mph",
+    "outcome": "not_upheld",
+    "decisiveFact": "The fence exclusion applied; the 25 mm in 24h wording limb was noted.",
+    "tags": ["fence_exclusion", "wall", "sail_effect"]
+  },
+  {
+    "drn": "DRN-3440138",
+    "insurer": "Admiral",
+    "damageType": "roof",
+    "facts": "Wear and tear was defined in the wording.",
+    "weatherCited": "-",
+    "outcome": "not_upheld",
+    "decisiveFact": "Ground-level photography was sufficient on the balance of probabilities.",
+    "tags": ["wear_and_tear", "ground_level_photos", "balance_of_probabilities"]
+  }
+]

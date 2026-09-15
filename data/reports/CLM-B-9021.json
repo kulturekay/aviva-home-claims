@@ -1,0 +1,18 @@
+{
+  "claimId": "CLM-B-9021",
+  "author": { "type": "field", "firm": "Aviva field surveying" },
+  "recommendation": "decline",
+  "statedReason": "Flat roof failure consistent with age, ponding and prior patch repairs; rainfall on the date of loss did not exceed the storm threshold and the defects predate the event.",
+  "narrative": "Field inspection carried out and photographed on 29 Jan 2026, the day after the reported loss. The kitchen flat roof shows established ponding, a visibly sagging and soft decking board, an existing bitumen patch repair over an earlier split, and moss growth along the upstand. The internal staining is directly below the failed section. Causation: the covering had reached the end of its serviceable life and was already failing; the rainfall on the date of loss revealed rather than caused the ingress. The customer paid 680 GBP for an emergency tarpaulin to prevent further internal damage while the claim was assessed. Recommend decline on gradual deterioration and lack of maintenance grounds.",
+  "photos": [
+    { "id": "B-p1", "description": "Flat roof overview (dated 2026-01-29)", "taken": "roof", "dated": true, "exifPresent": true, "showsPriorRepair": false },
+    { "id": "B-p2", "description": "Ponding water pooled on the decking (dated)", "taken": "roof", "dated": true, "exifPresent": true, "showsPriorRepair": false },
+    { "id": "B-p3", "description": "Sagging, soft decking board (dated)", "taken": "roof", "dated": true, "exifPresent": true, "showsPriorRepair": false },
+    { "id": "B-p4", "description": "Bitumen patch repair over an earlier split (dated)", "taken": "roof", "dated": true, "exifPresent": true, "showsPriorRepair": true },
+    { "id": "B-p5", "description": "Moss growth along the upstand (dated)", "taken": "roof", "dated": true, "exifPresent": true, "showsPriorRepair": false },
+    { "id": "B-p6", "description": "Internal ceiling staining below the leak (dated)", "taken": "customer", "dated": true, "exifPresent": true, "showsPriorRepair": false }
+  ],
+  "priorRepairsObserved": true,
+  "causationReasoned": true,
+  "customerEmergencyRepairCost": 680
+}
