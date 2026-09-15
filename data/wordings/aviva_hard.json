@@ -1,0 +1,10 @@
+{
+  "id": "aviva_hard",
+  "brand": "Aviva (underwritten variant)",
+  "version": "hard-threshold variant",
+  "effectiveFrom": "2019-04-01",
+  "discretionary": false,
+  "stormDefinition": "A period of violent weather which may incorporate wind speeds of at least 48 knots (55mph).",
+  "exclusions": ["fences, gates and hedges", "wear and tear", "gradual deterioration", "lack of maintenance"],
+  "cashSettlementClause": "If we are able to repair or replace your property but agree to settle using cash or a voucher we will only pay you what it would have cost us to repair, rebuild or replace it."
+}

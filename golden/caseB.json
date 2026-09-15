@@ -1,0 +1,151 @@
+{
+  "caseId": "B",
+  "claimId": "CLM-B-9021",
+  "recordedFrom": "live anthropic/claude-sonnet-4-5 at 2026-09-15T15:02:32.601Z",
+  "returnedDrns": [
+    "DRN-4885234",
+    "DRN-3440138",
+    "DRN-4193511",
+    "DRN-4626921",
+    "DRN-5580631"
+  ],
+  "toolCalls": [
+    {
+      "tool": "getAdjusterReport",
+      "args": {
+        "claimId": "CLM-B-9021"
+      },
+      "resultSummary": "{\"claimId\":\"CLM-B-9021\",\"author\":{\"type\":\"field\",\"firm\":\"Aviva field surveying\"},\"recommendation\":\"decline\",\"statedReason\":\"Flat roof failure consistent with age, ponding and prior patch repairs; rainfall on the date of loss did not exceed the storm threshold and the defects predate the event.\",\"nar..."
+    },
+    {
+      "tool": "findFosPrecedents",
+      "args": {
+        "damageType": "flat_roof",
+        "tags": [
+          "burden_of_proof",
+          "wear_and_tear",
+          "gradual_deterioration",
+          "rainfall_threshold"
+        ]
+      },
+      "resultSummary": "{\"precedents\":[{\"drn\":\"DRN-4885234\",\"insurer\":\"Aviva\",\"damageType\":\"flat_roof\",\"outcome\":\"not_upheld\",\"weatherCited\":\"storm in prior 6 weeks accepted\",\"decisiveFact\":\"Decking failure was not consistent with a one-off event; it was gradual.\",\"tags\":[\"flat_roof\",\"decking\",\"ponding\",\"gradual_deteriorat..."
+    }
+  ],
+  "review": {
+    "wordingVersion": "aviva_v8",
+    "wordingNote": "Discretionary wording: gusts normally exceed 55mph; rainfall at least 25mm/hr. The wording allows other factors such as siting to be considered.",
+    "q1_stormConditions": {
+      "finding": "borderline",
+      "evidence": [
+        {
+          "source": "weather",
+          "ref": "Exeter Airport (4km)",
+          "quote": "maxGust 44mph, maxRain 27mm/hr"
+        },
+        {
+          "source": "weather",
+          "ref": "Dunkeswell Aerodrome (9km)",
+          "quote": "maxGust 41mph, maxRain 24mm/hr"
+        },
+        {
+          "source": "weather",
+          "ref": "Context",
+          "quote": "namedStorm: Chandra"
+        },
+        {
+          "source": "wording",
+          "ref": "aviva_v8 storm definition",
+          "quote": "persistent high winds with gusts normally exceeding 55mph (48 knots) and/or heavy rainfall at a rate of at least 25mm per hour"
+        },
+        {
+          "source": "wording",
+          "ref": "aviva_v8 discretion",
+          "quote": "We will also take other factors into consideration such as where the property is sited. | discretionary=true"
+        }
+      ],
+      "gaps": [
+        "Wind gusts at nearest station (4km) reached 44mph, below the 55mph threshold stated; rainfall at 27mm/hr exceeded the 25mm/hr threshold. Named storm Chandra corroborates severe weather but does not itself establish the threshold at this specific postcode. The discretionary clause permits other factors to be considered but no siting or exposure factors are documented in the file."
+      ]
+    },
+    "q2_damageConsistent": {
+      "finding": "yes",
+      "evidence": [
+        {
+          "source": "report",
+          "ref": "B-p2, narrative",
+          "quote": "Ponding water pooled on the decking (dated); the kitchen flat roof shows established ponding"
+        },
+        {
+          "source": "report",
+          "ref": "B-p6, narrative",
+          "quote": "Internal ceiling staining below the leak; The internal staining is directly below the failed section"
+        },
+        {
+          "source": "wording",
+          "ref": "aviva_v8 storm definition",
+          "quote": "heavy rainfall at a rate of at least 25mm per hour"
+        }
+      ],
+      "gaps": []
+    },
+    "q3_mainCause": {
+      "finding": "pre_existing",
+      "evidence": [
+        {
+          "source": "report",
+          "ref": "B-p3, B-p4, B-p5, narrative",
+          "quote": "Sagging, soft decking board (dated); Bitumen patch repair over an earlier split (dated); Moss growth along the upstand (dated); the covering had reached the end of its serviceable life and was already failing"
+        },
+        {
+          "source": "report",
+          "ref": "narrative",
+          "quote": "Field inspection carried out and photographed on 29 Jan 2026, the day after the reported loss"
+        },
+        {
+          "source": "precedent",
+          "ref": "DRN-4885234",
+          "quote": "Decking failure was not consistent with a one-off event; it was gradual."
+        }
+      ],
+      "gaps": [
+        "No dated pre-loss photographs exist, but the adjuster's dated photographs the day after the event show established ponding, sagging decking, a prior bitumen patch repair and moss growth - all indicating a long-standing condition. The rainfall may have triggered the final leak but the roof was already failing."
+      ]
+    },
+    "adjusterReportQuality": {
+      "photosOfCorrectProperty": true,
+      "photosDated": true,
+      "priorRepairsDocumented": true,
+      "causationReasoned": true,
+      "note": "High-quality field report: roof-level dated photographs taken the day after the event, showing established ponding, sagging decking, a prior patch repair and moss growth. Causation reasoning is clear and supported by the photographic evidence."
+    },
+    "verdict": "agree_decline",
+    "confidence": "high",
+    "confidenceDrivers": [
+      "Dated photographs taken the day after the event show established ponding, sagging decking, prior bitumen patch repair and moss growth - all indicating gradual deterioration",
+      "Rainfall at 27mm/hr exceeded the wording threshold, but wind gusts at 44mph did not reach the 55mph threshold; Q1 is borderline but Q3 is clear",
+      "DRN-4885234 (Aviva flat roof, ponding, gradual deterioration) supports the not-upheld outcome on similar facts"
+    ],
+    "wouldChangeMind": [
+      "Dated pre-loss photographs showing the roof was sound before the event",
+      "Evidence of a sudden impact or one-off failure mechanism during the storm (such as a debris strike or a blocked outlet that failed suddenly)"
+    ],
+    "carveOuts": {
+      "temporaryRepairPayable": "likely",
+      "accidentalDamageInternal": "consider"
+    },
+    "consumerDutyChecks": {
+      "vulnerabilityConsidered": true,
+      "cashCriteriaMet": "n/a",
+      "reasonsExplainable": true
+    },
+    "escalate": {
+      "required": false,
+      "to": [],
+      "why": ""
+    },
+    "citedDrns": [
+      "DRN-4885234"
+    ],
+    "draftParagraph": "Rainfall on 28 January 2026 exceeded the policy threshold at 27mm/hr, but the photographs taken the next day show the flat roof was already failing: established ponding, sagging decking, a prior bitumen patch repair and moss growth all point to gradual deterioration. The storm revealed rather than caused the leak. Your £680 emergency tarpaulin cost will be reviewed separately as a temporary repair to prevent further damage."
+  }
+}

@@ -1,0 +1,10 @@
+{
+  "id": "aviva_v6",
+  "brand": "Aviva",
+  "version": "v6 (legacy)",
+  "effectiveFrom": "2019-04-01",
+  "discretionary": true,
+  "stormDefinition": "An unusual weather event with persistent high winds usually associated with rain, thunder, lightning or snow. The wind speed or gust should normally exceed 55mph (48 knots) to be a 'storm' but we take other factors into consideration such as where the property is sited.",
+  "exclusions": ["fences, gates and hedges", "wear and tear", "gradual deterioration", "lack of maintenance"],
+  "cashSettlementClause": "If we are able to repair or replace your property but agree to settle using cash or a voucher we will only pay you what it would have cost us to repair, rebuild or replace it."
+}

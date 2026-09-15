@@ -1,0 +1,12 @@
+{
+  "postcodeDistrict": "WV",
+  "dateOfLoss": "2025-12-09",
+  "window": { "from": "2025-12-09T00:00:00Z", "to": "2025-12-09T23:59:00Z" },
+  "namedStorm": "Bram",
+  "status": "ok",
+  "stations": [
+    { "name": "Wolverhampton Airfield", "distanceKm": 3, "meanWindMph": 31, "maxGustMph": 61, "maxRainMmPerHr": 4.2, "snowCm": 0 },
+    { "name": "Halfpenny Green", "distanceKm": 7, "meanWindMph": 28, "maxGustMph": 58, "maxRainMmPerHr": 3.8, "snowCm": 0 },
+    { "name": "Shifnal", "distanceKm": 12, "meanWindMph": 26, "maxGustMph": 54, "maxRainMmPerHr": 3.1, "snowCm": 0 }
+  ]
+}

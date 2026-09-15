@@ -1,0 +1,13 @@
+{
+  "claimId": "CLM-E-7310",
+  "author": { "type": "tpa", "firm": "Meridian Loss Adjusters (TPA)" },
+  "recommendation": "decline",
+  "statedReason": "Unable to obtain local weather corroboration; damage treated as maintenance-related.",
+  "narrative": "Desk review of reported ridge tile displacement and water ingress at a rural property. No weather station data was available for the postcode district. On the balance of the file I consider the damage more consistent with maintenance issues and recommend decline.",
+  "photos": [
+    { "id": "E-p1", "description": "Ridge line from the driveway, wide shot", "taken": "ground", "dated": false, "exifPresent": false, "showsPriorRepair": false },
+    { "id": "E-p2", "description": "Gable elevation showing displaced ridge tiles", "taken": "ground", "dated": false, "exifPresent": false, "showsPriorRepair": false }
+  ],
+  "priorRepairsObserved": false,
+  "causationReasoned": false
+}

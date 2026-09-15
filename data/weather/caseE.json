@@ -1,0 +1,9 @@
+{
+  "postcodeDistrict": "LD",
+  "dateOfLoss": "2025-12-09",
+  "window": { "from": "2025-12-09T00:00:00Z", "to": "2025-12-09T23:59:00Z" },
+  "namedStorm": "Bram",
+  "status": "unavailable",
+  "reason": "no station within 15 km",
+  "stations": []
+}

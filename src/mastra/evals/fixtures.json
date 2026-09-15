@@ -1,0 +1,21 @@
+{
+  "note": "Citation-faithfulness eval set (reframed from the spec's 17-outcome set). Only the authored cases A/B/E are runnable, so the eval measures citation faithfulness, verdict-class match and a paired-variant regression, NOT outcome accuracy against 17 leaked answers. controllingDrns are held out from findFosPrecedents in live mode so the model cannot copy its own answer key.",
+  "cases": [
+    {
+      "caseId": "A",
+      "expected": { "verdict": "disagree_decline", "decisiveFactKeywords": ["burden", "undated", "gust", "mortar"] },
+      "metadata": { "controllingDrns": ["DRN-6301360", "DRN-4626921"], "damageType": "roof_tiles", "wordingDiscretionary": true, "borderline": false }
+    },
+    {
+      "caseId": "B",
+      "expected": { "verdict": "agree_decline", "decisiveFactKeywords": ["ponding", "decking", "patch", "gradual"] },
+      "metadata": { "controllingDrns": ["DRN-4885234", "DRN-4997488"], "damageType": "flat_roof", "wordingDiscretionary": true, "borderline": false }
+    },
+    {
+      "caseId": "E",
+      "expected": { "verdict": "cannot_determine", "decisiveFactKeywords": ["weather", "unavailable", "postcode", "station"] },
+      "metadata": { "controllingDrns": [], "damageType": "roof_tiles", "wordingDiscretionary": true, "borderline": true }
+    }
+  ],
+  "pairedRegression": { "base": "A", "variant": "E", "expectation": "the source-unavailable variant of A must flip the verdict to cannot_determine" }
+}

@@ -1,0 +1,14 @@
+node_modules/
+dist/
+.mastra/
+mastra.db
+mastra.db-*
+*.db-journal
+*.db-wal
+*.db-shm
+.env
+.env.local
+# Runtime audit output is regenerated; keep the directory shape via .gitkeep
+audit/log.jsonl
+audit/notes/*.txt
+.gstack/

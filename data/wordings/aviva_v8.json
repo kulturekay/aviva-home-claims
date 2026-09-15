@@ -1,0 +1,10 @@
+{
+  "id": "aviva_v8",
+  "brand": "Aviva",
+  "version": "v8 (Oct 2025, current)",
+  "effectiveFrom": "2025-10-01",
+  "discretionary": true,
+  "stormDefinition": "An extreme weather event with persistent high winds with gusts normally exceeding 55mph (48 knots) and/or heavy rainfall at a rate of at least 25mm per hour and/or snow to a depth of at least 30cm in 24 hours and/or hail of such intensity that it causes damage to hard surfaces or breaks glass, according to our weather data. We will also take other factors into consideration such as where the property is sited. A storm can highlight defects rather than cause them and damage due to lack of maintenance, wear and tear or which happens gradually is not covered.",
+  "exclusions": ["fences, gates and hedges", "wear and tear", "gradual deterioration", "lack of maintenance"],
+  "cashSettlementClause": "If we are able to repair or replace your property but agree to settle using cash or a voucher we will only pay you what it would have cost us to repair, rebuild or replace it."
+}

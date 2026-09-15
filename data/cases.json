@@ -1,0 +1,38 @@
+[
+  {
+    "id": "A",
+    "title": "Wrongful decline (hero)",
+    "claimId": "CLM-A-8842",
+    "customerId": "CUST-A",
+    "policyId": "aviva_v8",
+    "postcodeDistrict": "WV",
+    "dateOfLoss": "2025-12-09",
+    "damageType": "roof_tiles",
+    "brand": "Aviva",
+    "summary": "Ridge tiles displaced with water ingress. A TPA desk adjuster declined citing 38 mph and mortar deterioration, on two undated ground-level photos. The insurer's burden on the exclusion looks undischarged."
+  },
+  {
+    "id": "B",
+    "title": "Defensible decline",
+    "claimId": "CLM-B-9021",
+    "customerId": "CUST-B",
+    "policyId": "aviva_v8",
+    "postcodeDistrict": "EX",
+    "dateOfLoss": "2026-01-28",
+    "damageType": "flat_roof",
+    "brand": "Aviva",
+    "summary": "Kitchen flat roof water ingress. A field surveyor declined with six dated photos showing ponding, sagging decking, a prior patch repair and moss. Causation is reasoned."
+  },
+  {
+    "id": "E",
+    "title": "Source unavailable",
+    "claimId": "CLM-E-7310",
+    "customerId": "CUST-E",
+    "policyId": "aviva_v8",
+    "postcodeDistrict": "LD",
+    "dateOfLoss": "2025-12-09",
+    "damageType": "roof_tiles",
+    "brand": "Aviva",
+    "summary": "Ridge tile displacement at a rural property. No weather station within 15 km, so storm conditions at the postcode cannot be confirmed from the file."
+  }
+]
