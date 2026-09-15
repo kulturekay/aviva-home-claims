@@ -1,7 +1,7 @@
 {
   "caseId": "E",
   "claimId": "CLM-E-7310",
-  "recordedFrom": "live anthropic/claude-sonnet-4-5 at 2026-09-15T15:03:01.365Z",
+  "recordedFrom": "live anthropic/claude-sonnet-4-5 at 2026-09-15T15:10:52.544Z",
   "returnedDrns": [
     "DRN-4626921",
     "DRN-4193511",
@@ -38,78 +38,24 @@
   ],
   "review": {
     "wordingVersion": "aviva_v8",
-    "wordingNote": "Discretionary wording: gusts 'normally' exceed 55 mph and siting is a factor. No hard threshold.",
+    "wordingNote": "Discretionary wording: gusts 'normally' exceeding 55 mph with siting factors. No hard minimum. Lack of station data is an evidence gap, not proof damage is excluded.",
     "q1_stormConditions": {
       "finding": "unknown",
       "evidence": [
         {
           "source": "weather",
-          "ref": "prefetch",
+          "ref": "prefetched weather context",
           "quote": "status: unavailable - no station within 15 km. No station data for this postcode. Do not infer wind speed from the named-storm list alone."
         },
         {
           "source": "wording",
-          "ref": "aviva_v8",
-          "quote": "gusts normally exceeding 55mph… We will also take other factors into consideration such as where the property is sited."
+          "ref": "aviva_v8 storm definition",
+          "quote": "gusts normally exceeding 55mph (48 knots) and/or heavy rainfall at a rate of at least 25mm per hour... We will also take other factors into consideration such as where the property is sited."
         },
         {
           "source": "report",
-          "ref": "adjuster narrative",
+          "ref": "Meridian TPA narrative",
           "quote": "No weather station data was available for the postcode district."
-        }
-      ],
-      "gaps": [
-        "No station data exists for this postcode. The date of loss is 9 December 2025 (future); no weather report is possible. The adjuster desk-reviewed without weather corroboration. Cannot determine whether storm occurred."
-      ]
-    },
-    "q2_damageConsistent": {
-      "finding": "yes",
-      "evidence": [
-        {
-          "source": "report",
-          "ref": "narrative",
-          "quote": "ridge tile displacement and water ingress"
-        },
-        {
-          "source": "report",
-          "ref": "E-p2",
-          "quote": "Gable elevation showing displaced ridge tiles"
-        },
-        {
-          "source": "precedent",
-          "ref": "DRN-4997488",
-          "quote": "ridge tiles… storm confirmed… emergency temporary repair was payable"
-        },
-        {
-          "source": "precedent",
-          "ref": "DRN-4286647",
-          "quote": "corner tile loss was storm damage"
-        }
-      ],
-      "gaps": []
-    },
-    "q3_mainCause": {
-      "finding": "unknown",
-      "evidence": [
-        {
-          "source": "report",
-          "ref": "narrative",
-          "quote": "I consider the damage more consistent with maintenance issues"
-        },
-        {
-          "source": "report",
-          "ref": "causationReasoned",
-          "quote": "false - causationReasoned: false; no reasoning provided"
-        },
-        {
-          "source": "report",
-          "ref": "photos",
-          "quote": "dated: false for E-p1 and E-p2; exifPresent: false; showsPriorRepair: false"
-        },
-        {
-          "source": "precedent",
-          "ref": "DRN-4193511",
-          "quote": "The insurer had no photographs to discharge its burden on the gradual-cause exclusion."
         },
         {
           "source": "precedent",
@@ -118,7 +64,53 @@
         }
       ],
       "gaps": [
-        "Adjuster asserts maintenance issues but provides no dated photographs of pre-existing defects, no prior-repair documentation, and no reasoned causation. Under stage 2 burden, the insurer must prove the exclusion; a bare assertion does not discharge it."
+        "No station data for postcode district LD. Date of loss 2025-12-09; no Met Office named storm listed. No rainfall, hail or snow data. Cannot confirm or rule out storm conditions at property."
+      ]
+    },
+    "q2_damageConsistent": {
+      "finding": "yes",
+      "evidence": [
+        {
+          "source": "report",
+          "ref": "photo E-p2, narrative",
+          "quote": "Gable elevation showing displaced ridge tiles"
+        },
+        {
+          "source": "wording",
+          "ref": "aviva_v8",
+          "quote": "A storm can highlight defects rather than cause them and damage due to lack of maintenance, wear and tear or which happens gradually is not covered."
+        },
+        {
+          "source": "precedent",
+          "ref": "DRN-4286647, DRN-4997488",
+          "quote": "The corner tile loss was storm damage; later slipped tiles fall under accidental damage cover. / Decline was fair, but 1,100 GBP emergency temporary repair was payable plus 8 percent interest."
+        }
+      ],
+      "gaps": [
+        "Photos are not dated (exifPresent:false). No roof-level photo. No close-up of fixings or mortar. Cannot assess pre-existing condition or how sudden the displacement was."
+      ]
+    },
+    "q3_mainCause": {
+      "finding": "unknown",
+      "evidence": [
+        {
+          "source": "report",
+          "ref": "Meridian TPA causationReasoned=false",
+          "quote": "On the balance of the file I consider the damage more consistent with maintenance issues and recommend decline."
+        },
+        {
+          "source": "precedent",
+          "ref": "DRN-4193511",
+          "quote": "The insurer had no photographs to discharge its burden on the gradual-cause exclusion."
+        },
+        {
+          "source": "precedent",
+          "ref": "DRN-5115402",
+          "quote": "The insurer's own images showed mortar cracking and the roofer gave no causation opinion."
+        }
+      ],
+      "gaps": [
+        "No dated photos showing prior state of ridge. No expert opinion on whether displacement was sudden or gradual. No close-up showing mortar condition, fixing corrosion, or other evidence of gradual deterioration. Adjuster has not discharged the stage 2 burden for the maintenance/gradual-deterioration exclusion."
       ]
     },
     "adjusterReportQuality": {
@@ -126,19 +118,19 @@
       "photosDated": false,
       "priorRepairsDocumented": false,
       "causationReasoned": false,
-      "note": "Desk review with undated ground shots and no causation reasoning. The narrative asserts maintenance without any evidence to discharge stage 2 burden."
+      "note": "Desk review with two undated ground-level photos. The narrative asserts maintenance cause ('on the balance of the file') without showing dated evidence of pre-existing deterioration. This does not discharge the insurer's burden of proof for the gradual-cause exclusion."
     },
     "verdict": "cannot_determine",
     "confidence": "low",
     "confidenceDrivers": [
-      "No weather data exists for the postcode on the date of loss",
-      "Date of loss is in the future (9 Dec 2025); no weather report is possible",
-      "Adjuster provided no reasoned causation and no dated photos to prove maintenance exclusion"
+      "Lack of station data means Q1 cannot be answered; under the discretionary wording the burden at stage 1 rests on the customer, but the adjuster has not tested whether a storm did occur on the date",
+      "Adjuster has not provided dated photographs or expert reasoning to discharge the insurer's stage 2 burden that the damage was gradual/maintenance-related",
+      "The Ombudsman has upheld similar files where the insurer asserted gradual cause without photographic evidence (DRN-4193511)"
     ],
     "wouldChangeMind": [
-      "Actual weather data from a nearby station showing gusts below storm threshold",
-      "Dated photographs of the same ridge defect taken before any named storm",
-      "Expert causation opinion with roof-level inspection"
+      "a weather report for the postcode district",
+      "Weather station data for LD postcode on 2025-12-09 showing gusts below 50 mph and no rainfall/hail",
+      "Dated pre-loss roof survey or photograph showing the same ridge tiles already displaced"
     ],
     "carveOuts": {
       "temporaryRepairPayable": "likely",
@@ -154,12 +146,15 @@
       "to": [
         "technical_lead"
       ],
-      "why": "Date of loss is 9 December 2025 (future); no weather report exists. No station data available and adjuster asserts maintenance without evidence to discharge stage 2 burden. Decline cannot be justified on this file."
+      "why": "Recommendation relies on maintenance exclusion without dated photos or expert causation analysis. Weather data gap means Q1 cannot be answered. Technical lead should decide whether to instruct surveyor to establish pre-loss roof condition and whether customer has other evidence of storm occurrence (e.g. neighbour damage, local authority reports, insurer claims in area)."
     },
     "citedDrns": [
       "DRN-4193511",
-      "DRN-4626921"
+      "DRN-4626921",
+      "DRN-4286647",
+      "DRN-4997488",
+      "DRN-5115402"
     ],
-    "draftParagraph": "We cannot determine whether storm conditions occurred because no weather station covers your postcode and the date is not yet past. The adjuster treated the ridge-tile damage as maintenance-related, but provided no dated photographs or reasoned explanation to prove that exclusion applies. Under Ombudsman guidance (DRN-4193511, DRN-4626921), the insurer must prove an exclusion it relies on. On the current file, the decline recommendation does not meet that standard."
+    "draftParagraph": "I cannot support the decline. We have no weather station data for the postcode on 9 December 2025, so we cannot say whether storm conditions occurred. The adjuster's desk review asserts maintenance cause without dated photographs or expert reasoning to prove gradual deterioration, so we have not discharged our burden for that exclusion. The Ombudsman has upheld similar claims where the insurer lacked photographic evidence (DRN-4193511). I recommend instructing a surveyor to inspect the ridge and, if a sudden cause is found, obtaining weather evidence or treating under accidental damage cover."
   }
 }
