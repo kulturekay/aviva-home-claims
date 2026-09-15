@@ -1,0 +1,1 @@
+/Users/kanelocaleb/.gstack/render/claude/design-shotgun/SKILL.md

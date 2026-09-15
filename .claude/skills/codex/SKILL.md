@@ -1,0 +1,1 @@
+/Users/kanelocaleb/.gstack/render/claude/codex/SKILL.md
