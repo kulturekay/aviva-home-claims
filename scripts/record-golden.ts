@@ -1,6 +1,7 @@
 // npm run golden <caseId> - record a canonical golden run from a LIVE model call
 // and write it to golden/case<caseId>.json. Needs ANTHROPIC_API_KEY. The demo
 // then replays this cached run with zero keys, so it never depends on a live call.
+import '../src/mastra/lib/env.ts'; // load .env before anything reads process.env
 import fs from 'node:fs';
 import path from 'node:path';
 import { GOLDEN_DIR } from '../src/mastra/lib/paths.ts';

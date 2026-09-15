@@ -14,7 +14,10 @@ test('Case A: suspends with disagree_decline, guards pass, resume writes an audi
   const p = res.suspendPayload.gate;
   assert.equal(p.review.verdict, 'disagree_decline');
   assert.equal(p.review.confidence, 'high');
-  assert.ok(p.review.citedDrns.includes('DRN-6301360') || p.review.citedDrns.includes('DRN-4626921'));
+  // Golden runs are recorded from a live (nondeterministic) model, so assert the
+  // invariant, not exact DRNs: it cited at least one precedent and the guard
+  // confirmed every cited DRN was actually returned this run (no fabrication).
+  assert.ok(Array.isArray(p.review.citedDrns) && p.review.citedDrns.length > 0, 'cites at least one precedent');
   assert.equal(p.guard.precedent.ok, true, 'every cited DRN was returned this run');
   assert.equal(p.guard.blocked, false);
 

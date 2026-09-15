@@ -1,5 +1,6 @@
 // npm run demo - the hello-world moment. Fires the hero case (A) end to end,
 // prints the verdict and the suspend reason, and points at the trace + UI.
+import '../src/mastra/lib/env.ts'; // load .env before anything reads process.env
 import { mastra } from '../src/mastra/index.ts';
 import { shouldUseGolden } from '../src/mastra/lib/golden.ts';
 

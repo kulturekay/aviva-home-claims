@@ -1,6 +1,7 @@
 // npm run doctor - preflight. Checks Node, keys, that the Mastra instance
 // constructs, and that every case's fixtures (and golden run) are present.
 // Exits 0 when the demo can run (golden mode needs no keys); warns otherwise.
+import '../src/mastra/lib/env.ts'; // load .env before anything reads process.env
 import fs from 'node:fs';
 import path from 'node:path';
 import { DATA_DIR, GOLDEN_DIR } from '../src/mastra/lib/paths.ts';

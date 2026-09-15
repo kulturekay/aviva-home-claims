@@ -1,70 +1,175 @@
 {
   "caseId": "A",
   "claimId": "CLM-A-8842",
-  "recordedFrom": "hand-authored to the spec's expected output; re-record live with the golden script (npm run golden A) once ANTHROPIC_API_KEY is set",
-  "returnedDrns": ["DRN-4626921", "DRN-6301360", "DRN-3440138", "DRN-4193511", "DRN-4286647"],
+  "recordedFrom": "live anthropic/claude-sonnet-4-5 at 2026-09-15T15:02:03.151Z",
+  "returnedDrns": [
+    "DRN-4626921",
+    "DRN-4193511",
+    "DRN-4286647",
+    "DRN-4997488",
+    "DRN-5115402"
+  ],
   "toolCalls": [
     {
       "tool": "getAdjusterReport",
-      "args": { "claimId": "CLM-A-8842" },
-      "resultSummary": "recommendation=decline; two ground-level photos, undated, no mortar close-up; priorRepairsObserved=false; causationReasoned=false"
-    },
-    {
-      "tool": "getCustomerContext",
-      "args": { "customerId": "CUST-A" },
-      "resultSummary": "vulnerabilityFlag=false; tenure 9y; 0 prior claims"
+      "args": {
+        "claimId": "CLM-A-8842"
+      },
+      "resultSummary": "{\"claimId\":\"CLM-A-8842\",\"author\":{\"type\":\"tpa\",\"firm\":\"Meridian Loss Adjusters (TPA)\"},\"recommendation\":\"decline\",\"statedReason\":\"Weather data shows 38 mph; damage consistent with mortar deterioration.\",\"narrative\":\"Desk review only. Roof covering is aged. In my opinion the ridge tiles have failed d..."
     },
     {
       "tool": "findFosPrecedents",
-      "args": { "damageType": "roof_tiles", "tags": ["gusts_vs_mean", "burden_of_proof", "wear_and_tear", "insurer_wrong_on_q1"] },
-      "resultSummary": "5 returned: DRN-4626921, DRN-6301360, DRN-3440138, DRN-4193511, DRN-4286647"
+      "args": {
+        "damageType": "roof_tiles",
+        "tags": [
+          "burden_of_proof",
+          "gusts_vs_mean",
+          "deterioration"
+        ]
+      },
+      "resultSummary": "{\"precedents\":[{\"drn\":\"DRN-4626921\",\"insurer\":\"AXA\",\"damageType\":\"roof_tiles\",\"outcome\":\"upheld\",\"weatherCited\":\"contested\",\"decisiveFact\":\"The complaint handler's roof-failure theory was not expert evidence.\",\"tags\":[\"roof\",\"roof_tiles\",\"no_storm_at_stations\",\"not_expert_evidence\",\"burden_of_proof\"..."
     }
   ],
   "review": {
-    "wordingVersion": "aviva_v8 (Oct 2025, current)",
-    "wordingNote": "The wording in force is aviva_v8, which is discretionary: gusts 'normally' exceeding 55 mph and siting are considered, so gusts in the low-to-mid 50s and above have been treated as storm.",
+    "wordingVersion": "aviva_v8",
+    "wordingNote": "Discretionary threshold: gusts 'normally' exceeding 55 mph, with siting factors. Under this wording 50-52 mph gusts have been treated as storm by the Ombudsman.",
     "q1_stormConditions": {
       "finding": "yes",
       "evidence": [
-        { "source": "weather", "ref": "Wolverhampton Airfield (3km)", "quote": "maxGust 61mph on 2025-12-09; named storm Bram" },
-        { "source": "wording", "ref": "aviva_v8 stormDefinition", "quote": "persistent high winds with gusts normally exceeding 55mph (48 knots)" }
+        {
+          "source": "wording",
+          "ref": "aviva_v8",
+          "quote": "gusts normally exceeding 55mph... We will also take other factors into consideration such as where the property is sited."
+        },
+        {
+          "source": "weather",
+          "ref": "Wolverhampton Airfield (3km)",
+          "quote": "maxGust 61mph"
+        },
+        {
+          "source": "weather",
+          "ref": "Halfpenny Green (7km)",
+          "quote": "maxGust 58mph"
+        },
+        {
+          "source": "weather",
+          "ref": "Shifnal (12km)",
+          "quote": "maxGust 54mph"
+        },
+        {
+          "source": "weather",
+          "ref": "namedStorm",
+          "quote": "Bram"
+        },
+        {
+          "source": "report",
+          "ref": "statedReason",
+          "quote": "Weather data shows 38 mph"
+        },
+        {
+          "source": "precedent",
+          "ref": "DRN-5115402",
+          "quote": "52 mph (policy 55) treated as storm... storm_threshold_discretionary"
+        }
       ],
       "gaps": []
     },
     "q2_damageConsistent": {
       "finding": "yes",
       "evidence": [
-        { "source": "report", "ref": "CLM-A-8842 narrative", "quote": "ridge tiles displaced with water ingress" }
+        {
+          "source": "report",
+          "ref": "photos A-p1, A-p2",
+          "quote": "Ridge line viewed from the garden, wide shot; Front elevation showing displaced ridge tiles"
+        },
+        {
+          "source": "report",
+          "ref": "narrative",
+          "quote": "ridge tiles have failed"
+        },
+        {
+          "source": "precedent",
+          "ref": "DRN-4997488",
+          "quote": "ridge_tiles... storm confirmed"
+        }
       ],
       "gaps": []
     },
     "q3_mainCause": {
       "finding": "unknown",
       "evidence": [
-        { "source": "report", "ref": "CLM-A-8842 photos", "quote": "two ground-level photos, undated, no close-up of the mortar bed" },
-        { "source": "precedent", "ref": "DRN-4193511", "quote": "insurer had no photos to discharge burden on gradual-cause exclusion" }
+        {
+          "source": "report",
+          "ref": "narrative",
+          "quote": "ridge tiles have failed due to long-term mortar deterioration"
+        },
+        {
+          "source": "report",
+          "ref": "causationReasoned",
+          "quote": "false"
+        },
+        {
+          "source": "report",
+          "ref": "photos A-p1, A-p2",
+          "quote": "dated: false"
+        },
+        {
+          "source": "precedent",
+          "ref": "DRN-4193511",
+          "quote": "The insurer had no photographs to discharge its burden on the gradual-cause exclusion."
+        },
+        {
+          "source": "report",
+          "ref": "statedReason",
+          "quote": "Weather data shows 38 mph"
+        },
+        {
+          "source": "weather",
+          "ref": "Wolverhampton Airfield (3km)",
+          "quote": "maxGust 61mph"
+        }
       ],
-      "gaps": ["no dated close-up of the mortar bed showing failure that pre-dates the event"]
+      "gaps": [
+        "No dated photographs showing pre-existing deterioration; no evidence to discharge stage 2 burden on gradual-cause exclusion; adjuster used mean wind (38 mph) rather than gusts (61 mph)"
+      ]
     },
     "adjusterReportQuality": {
       "photosOfCorrectProperty": true,
       "photosDated": false,
       "priorRepairsDocumented": false,
       "causationReasoned": false,
-      "note": "Desk review only; the stated 38 mph understates the recorded 61 mph gusts, and deterioration is asserted without dated evidence of the blamed defect."
+      "note": "Desk review. Adjuster cited 38 mph (mean wind) when three stations show gusts 54-61 mph. No dated photos of the very defect blamed. Causation is asserted ('in my opinion') but not reasoned."
     },
     "verdict": "disagree_decline",
     "confidence": "high",
     "confidenceDrivers": [
-      "recorded gusts of 61 mph far exceed the 38 mph the adjuster relied on",
-      "the insurer has not discharged its Stage 2 burden on the wear-and-tear exclusion",
-      "the only photos are undated and taken from the ground"
+      "Three stations show gusts 54-61 mph meeting or exceeding the discretionary threshold under aviva_v8 with Storm Bram confirmed; ridge tile displacement is storm-consistent damage",
+      "Adjuster relied on mean wind (38 mph) instead of gusts; no dated photographs to discharge the stage 2 burden on the gradual-deterioration exclusion (DRN-4193511)",
+      "Customer has established prima facie storm claim under Q1 and Q2; insurer has not proved the exclusion it relies on"
     ],
-    "wouldChangeMind": ["a dated close-up of the mortar bed showing failure that pre-dates 9 December 2025"],
-    "carveOuts": { "temporaryRepairPayable": "likely", "accidentalDamageInternal": "consider" },
-    "consumerDutyChecks": { "vulnerabilityConsidered": true, "cashCriteriaMet": "n/a", "reasonsExplainable": true },
-    "escalate": { "required": false, "to": [], "why": "" },
-    "citedDrns": ["DRN-6301360", "DRN-4626921"],
-    "draftParagraph": "We do not consider the decline defensible on the current evidence. Storm conditions are established: peak gusts of 61 mph at the nearest station on 9 December 2025 (Storm Bram) exceed the wording's 55 mph guide, and displaced ridge tiles with water ingress are storm-consistent. The insurer relies on mortar deterioration but has not discharged its burden: the photos are undated, taken from the ground, and none shows the mortar bed failing before the event. A dated close-up of pre-existing mortar failure would change this. Emergency or temporary repair costs are likely payable."
+    "wouldChangeMind": [
+      "Dated photographs showing the same ridge tiles with failed mortar before Storm Bram",
+      "Expert causation opinion explaining why 61 mph gusts could not displace the tiles if mortar was sound"
+    ],
+    "carveOuts": {
+      "temporaryRepairPayable": "likely",
+      "accidentalDamageInternal": "consider"
+    },
+    "consumerDutyChecks": {
+      "vulnerabilityConsidered": true,
+      "cashCriteriaMet": "n/a",
+      "reasonsExplainable": true
+    },
+    "escalate": {
+      "required": false,
+      "to": [],
+      "why": ""
+    },
+    "citedDrns": [
+      "DRN-4193511",
+      "DRN-4997488",
+      "DRN-5115402"
+    ],
+    "draftParagraph": "Three weather stations within 12 km recorded gusts of 54-61 mph during Storm Bram, meeting the policy threshold. Ridge tile displacement is damage a storm causes. The adjuster relied on mean wind (38 mph) rather than gusts and provided no dated photographs showing the mortar had already failed before the storm. Under stage 2 of the burden of proof, the insurer must prove a gradual-cause exclusion applies; that has not been done here."
   }
 }

@@ -1,3 +1,4 @@
+import './mastra/lib/env.ts'; // load .env before anything reads process.env
 import fs from 'node:fs';
 import path from 'node:path';
 import { serve } from '@hono/node-server';

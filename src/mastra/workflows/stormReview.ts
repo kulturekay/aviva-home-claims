@@ -94,14 +94,41 @@ function summarizeToolCalls(toolResults: any[]): Array<{ tool: string; args: unk
   }));
 }
 
+// Normalize em/en dashes to hyphens (house style) across every string in the
+// review, so the UI and audit never render a long dash the model slipped in.
+const DASH_RE = new RegExp('\\s*[\\u2014\\u2013]\\s*', 'g');
+function normDashes(s: string): string {
+  return s.replace(DASH_RE, ' - ');
+}
+function deepNormDashes(v: any): any {
+  if (typeof v === 'string') return normDashes(v);
+  if (Array.isArray(v)) return v.map(deepNormDashes);
+  if (v && typeof v === 'object') {
+    const o: any = {};
+    for (const k of Object.keys(v)) o[k] = deepNormDashes(v[k]);
+    return o;
+  }
+  return v;
+}
+// Clip at a word boundary with an ASCII ellipsis, so an over-long paragraph never
+// ends mid-word in the hero demo.
+function clip(s: string, max: number): string {
+  if (s.length <= max) return s;
+  const cut = s.slice(0, max - 3);
+  const lastSpace = cut.lastIndexOf(' ');
+  const base = lastSpace > max - 80 ? cut.slice(0, lastSpace) : cut;
+  return `${base.replace(/[\s.,;:\-]+$/, '')}...`;
+}
+
 // E6: enforce the soft bounds in code rather than failing the run at 601 chars
 // or a 5th list item.
 function tidyReview(review: Review): Review {
+  const r = deepNormDashes(review) as Review;
   return {
-    ...review,
-    draftParagraph: (review.draftParagraph ?? '').slice(0, DRAFT_PARAGRAPH_MAX),
-    confidenceDrivers: (review.confidenceDrivers ?? []).slice(0, CONFIDENCE_DRIVERS_MAX),
-    wouldChangeMind: (review.wouldChangeMind ?? []).slice(0, WOULD_CHANGE_MIND_MAX),
+    ...r,
+    draftParagraph: clip(r.draftParagraph ?? '', DRAFT_PARAGRAPH_MAX),
+    confidenceDrivers: (r.confidenceDrivers ?? []).slice(0, CONFIDENCE_DRIVERS_MAX),
+    wouldChangeMind: (r.wouldChangeMind ?? []).slice(0, WOULD_CHANGE_MIND_MAX),
   };
 }
 

@@ -1,3 +1,4 @@
+import './lib/env.ts'; // load .env before anything reads process.env
 import { Mastra } from '@mastra/core';
 import { LibSQLStore } from '@mastra/libsql';
 import { Observability, MastraStorageExporter } from '@mastra/observability';
