@@ -1,167 +1,127 @@
-# Storm-claim second-line reviewer
+# storm-review
 
-A second-line reviewer for UK home-insurance storm claims. When a loss adjuster recommends declining a storm claim, this tool independently assembles the evidence the Financial Ombudsman would look at, answers the Ombudsman's three questions with quoted evidence, and tells the technical handler whether the recommendation is defensible, not defensible, or cannot be judged from the file. A human then approves, overrides with a reason, or escalates.
+**A second pair of eyes on home-insurance storm-claim declines.**
+When a loss adjuster recommends refusing a storm claim, this reviews the recommendation the way the Financial Ombudsman would, before the letter goes out, and hands a technical handler the evidence, a verdict, and an honest "how sure". It cannot decline anything itself.
 
-It reviews a recommendation. It never issues one: the reviewer can emit a review verdict, never a "decline" action.
+---
 
-House style in this repo: hyphens and colons only, no em or en dashes (a commit hook enforces it).
+## Run it: about 14 seconds from a cold clone, no API key
 
-## Quickstart (zero keys)
-
-```
+```bash
+git clone https://github.com/kulturekay/aviva-home-claims.git && cd aviva-home-claims
 npm ci
-npm run doctor      # preflight: node, keys, fixtures, mastra instance
-npm run demo        # fires the hero case (A) end to end from the cached golden run
-npm run serve       # UI at http://localhost:8787
+npm run doctor     # node version, keys, fixtures, precedent store, Mastra instance
+npm run demo       # replays Case A from a recorded model run and prints the trace
+npm run serve      # review screen at http://localhost:8787
 ```
 
-Look at this first:
-1. `npm run demo` prints Case A: verdict `disagree_decline`, high confidence, cited real Ombudsman DRNs, and the reason it suspended for a human.
-2. `npm run serve` then open Case A: the decision banner, the three Ombudsman questions with quoted evidence, the tool-call trace, and the human action bar.
-3. After you Accept or Override in the UI, an audit line is appended to `audit/log.jsonl` and a ClaimCenter note stub to `audit/notes/`.
+Measured at 14s on this machine (clone 6s, `npm ci` 5s, `demo` 1s) with a warm npm cache; a cold cache makes the install the long pole.
 
-The hero demo runs with NO API keys because the review step serves a cached golden run (`golden/caseA.json`). It never depends on a live model call landing on an expected output. Set a key (below) for live runs.
+With no key, every run replays a recorded run from `golden/`. Set `ANTHROPIC_API_KEY` in `.env` and the same commands call the model for real, roughly 15 to 30 seconds a case. `USE_GOLDEN=1` forces the recording back on for a rehearsed demo; `USE_GOLDEN=0` forces live. There is no toggle in the screen: the mode is shown in the header and chosen by the environment.
 
-## Reduced scope
+`npm run dev` opens Mastra Studio (traces, workflow state) at http://localhost:4111. `npm run evals` prints the eval table. `npm test` runs the 22 unit and integration tests.
 
-This build is the reviewed, reduced slice: Cases A, B and E. Cases C and D, image provenance (`checkImageProvenance`), and live SSE streaming are deferred by design (see the capability whiteboard below).
+---
 
-- Case A - wrongful decline (hero). Ridge tiles, WV district, Storm Bram. Adjuster cites 38 mph and mortar deterioration on two undated ground-level photos. Verdict: decline not defensible.
-- Case B - defensible decline. Kitchen flat roof, EX district, Storm Chandra. Field surveyor, six dated photos of ponding, sagging decking, a prior patch and moss. Verdict: decline defensible, with carve-outs.
-- Case E - source unavailable. Rural district with no weather station within 15 km. Verdict: cannot determine; the evidence gap is named and no wind speed is inferred from the named storm alone.
+## The problem, in numbers
 
-## The three Ombudsman questions
+The FCA reviewed 118,890 home storm claims from fifteen insurers in 2024. **32% were paid. 49% were refused.** Four of the fifteen had no written criteria for cash settlements; five had "limited control" over the outsourced firms handling their claims. The Ombudsman upholds **33%** of complaints against Aviva Insurance and **29%** against Direct Line's insurer, against a 27% industry average, and its own analysis found 80% of buildings complaints involved a third-party adjuster or surveyor. Since then the FCA has asked thirteen of the fifteen firms to re-examine their storm and cash-settlement handling, and a House of Lords committee has Aviva on its witness list.
 
-1. Did storm conditions occur on or around the date of loss, under the wording in force?
-2. Is the damage of a kind a storm causes?
-3. Was the storm the main cause, or was the damage already happening and merely revealed?
+[FCA multi-firm review, Jul 2025](https://www.fca.org.uk/publications/good-and-poor-practice/home-travel-claims-handling-arrangements) · [FOS firm data H2 2025](https://www.financial-ombudsman.org.uk/businesses/resolving-complaint/our-insight/half-yearly-complaints-data-h2-2025) · [FOS buildings complaints, Aug 2024](https://www.financial-ombudsman.org.uk/news/buildings-insurance-complaints-hit-10-year-high) · [FCA response to Which? super-complaint, Dec 2025](https://www.fca.org.uk/publication/corporate/fca-response-which-super-complaint.pdf)
 
-Burden of proof, in two correctly separated stages (the reviewer applies this, and it is a common thing adjusters get wrong):
-- Stage 1 is on the policyholder: show, on the balance of probabilities, that a storm occurred (Q1) and that the damage is of a storm-consistent kind (Q2). That is a prima facie storm claim.
-- Stage 2 shifts to the insurer: to decline on an exclusion (wear and tear, gradual deterioration, lack of maintenance) it must prove that exclusion applies. Asserting deterioration without dated photographs of the blamed defect does not discharge that burden.
+A wrong "no" today is caught months later, by a complaint. This catches it at the last cheap moment: after the adjuster recommends, before the handler signs.
 
-## What is real, and what is mocked
+## Who it's for
 
-Real (checkable):
-- The policy wordings are quoted from public Aviva and Direct Line documents.
-- The DRNs are real published Financial Ombudsman decisions, summarised in `data/precedents.json`.
-- The storm names and dates and the Ombudsman's three questions are real.
-- The authorities cited by the reviewer are real and correctly named: the FCA Consumer Duty (PRIN 2A), the FCA guidance on the fair treatment of vulnerable customers (FG21/1), and FCA claims-handling rules (ICOBS 8). There is deliberately no "ABI principle 4"; that phrasing does not name a real principle and is not used.
+The **technical claims handler** who signs off declines recommended by desk, field or outsourced adjusters. Aviva's own job adverts describe the role: desk adjusters handle building claims to £10k and £50k; a Home Claims Technical Consultant supports them and must know "the FOS approach". This is built for the person at that sign-off.
 
-Mocked (shaped like the real thing, but synthetic):
-- Weather reports are shaped like a WeatherNet feed (`data/weather/`).
-- The adjuster reports, customer records, and the five seeded cases are synthetic (`data/reports`, `data/customers`, `data/cases.json`).
+## What it does
 
-## How the pipeline works
+On an event (*adjuster recommends decline*) the workflow:
 
-```
-cases.json -> pick a case
-  [prefetch]   getPolicyWording + getWeatherReport (direct, no model); loads the
-               report metadata and customer flag into typed state so the gate is
-               deterministic; builds the goal/returnFormat/warnings/context block.
-  [review]     one agent call: tool-using investigation AND the structured verdict
-               together. Tools: getAdjusterReport, getCustomerContext,
-               findFosPrecedents (called one at a time). Golden-cache in zero-key mode.
-  [guard]      precedentGuard (every cited DRN was returned THIS run) and scopeGuard
-               (verdict is a review value). A block routes to a human, never a crash.
-  [gate]       needsHuman? suspend for a human. In this demo every case is gated
-               (no auto-file of a customer-adverse outcome). Resume with the decision.
-  [record]     append one line to audit/log.jsonl and a ClaimCenter note stub.
-LibSQLStore at file:<abs>/mastra.db  ->  a suspended run survives a process restart.
-```
+1. **Prefetches** the policy wording in force and a postcode-level weather report. No model involved; these are always needed. The adjuster's narrative is sanitised here, before the agent ever sees it.
+2. **Investigates.** One agent decides what else it needs and calls tools: the adjuster's report and photo metadata; the customer's vulnerability flag (a yes/no, never the notes); and Ombudsman precedents from a closed store. In the recorded runs it makes two calls for a straightforward case and three when the customer's circumstances matter. The agent is told to call one tool at a time and let each result decide the next; that sequencing is a prompt instruction, not a model-level setting (disabling parallel tool calls is provider-specific and is not wired here).
+3. **Answers the Ombudsman's three questions** with quoted evidence: Did storm conditions occur under *this* wording? Is this storm-type damage? Was the storm the main cause, or was it already failing?
+4. **Returns a structured review**: a verdict from five review values (the kept cases produce `agree_decline`, `disagree_decline` and `cannot_determine`; `agree_cash` and `disagree_cash` exist for the deferred cash-settlement case), confidence as a word (`high` / `medium` / `low`) with its drivers, what would change its mind, carve-outs (temporary repairs, accidental damage), Consumer Duty checks, and who to escalate to.
+5. **Suspends for a human.** Every case. The handler approves, overrides with a reason and a failure mode, or escalates. The run is persisted in LibSQL: kill the server mid-review, start a new process, and `POST /resume` completes it and writes the audit line. Verified with two different PIDs.
+6. **Records** an audit row: inputs, tool calls, review, decision, model, prompt version.
 
-## The four guards, and what each stops
+## The three cases
 
-- injectionGuard (input): removes instruction-shaped fragments from the untrusted narrative (for example "ignore previous instructions", "you must", "recommend payment"). Best-effort defence-in-depth. It runs in the shared report loader, because the narrative reaches the agent through a tool call, not through an input processor.
-- privacyGuard (input): pseudonymises titled names and truncates full postcodes to their district. Best-effort; the data here is already local.
-- precedentGuard (output): every cited DRN must be one that findFosPrecedents actually returned this run. This is the honest anti-fabrication control: it catches a real-but-unretrieved DRN, not just an obviously fake one.
-- scopeGuard (output): the verdict must be one of the review enum values. The reviewer reviews a recommendation and can never emit a decline as an action. The prose check for a decline directive is non-fatal: a paragraph that legitimately discusses a decline (as every real one does) must pass.
+| Case | Situation | What the reviewer does (recorded runs) | What it proves |
+|---|---|---|---|
+| **A** | Storm Bram, Dec 2025, Wolverhampton. TPA declines: "38 mph, mortar deterioration." Two undated ground photos. | Finds the 38 was a mean and the gust was 61 with a named storm; finds the report never photographed the mortar it blames. Q1 yes · Q2 yes · Q3 unknown. `disagree_decline`, **high**. Flags the temporary-repair carve-out. | It catches a wrong no on **evidence quality**, not wind speed alone. |
+| **B** | Storm Chandra, Jan 2026, Exeter. Flat roof; six dated photos of ponding, sagging, old patches, moss. | Calls Q1 *borderline* (44 mph gusts, 27 mm/hr rain under a "normally 55 mph" wording), Q3 pre-existing. `agree_decline`, **high**, and notes the £680 emergency repair is likely payable anyway. | Not a machine for paying claims. Same brain, opposite answer, plus what a tired handler forgets. |
+| **E** | Storm Bram, Dec 2025, mid-Wales. Same shape as A, but the weather source returns *unavailable*. | Says it cannot answer Q1 and why. `cannot_determine`, **low**. Does not infer wind speed from the storm's name. Escalates to the technical lead. | It knows when to stop. An evidence gap is a finding. |
 
-Honest framing: injectionGuard and privacyGuard are best-effort and trivially bypassable in general. The real control is that the agent has no outbound channel. It holds private data and reads untrusted text, so removing the ability to send removes the third leg of the lethal trifecta. That, not the regex guards, is the headline safety property.
+Each review cites between one and five Ombudsman decisions from the store. Which ones it cites varies from run to run; the verdict and confidence have not. Every citation is checked against what the precedent tool actually returned in that run: a cited decision that was not returned is stripped, the run is blocked from the clean path, and it goes to a human with the reason shown on screen.
 
-## North-star metric and merge rule
+## What is real and what is mocked
 
-North star: wrongly upheld declines, that is, cases where the review should have said the decline is not defensible (`disagree_decline`) but instead agreed with it (`agree_decline`). `npm run evals` prints this count.
+**Real:** the four storm definitions, quoted from Aviva's current and legacy wordings and Direct Line's September 2025 booklet. Three say "normally exceeding 55 mph", one says "minimum", and which one applies changes the answer; the 17 Ombudsman decisions in `data/precedents.json`, with their reference numbers; the Met Office storm names and dates; every regulatory figure above.
 
-Merge rule: no prompt or model change ships if the north-star count rises on this suite.
+**Mocked:** the weather reports (shaped like a WeatherNet postcode report, which is what the Ombudsman and most UK insurers use); the adjuster reports; the customer records; the claims system. There are no network calls in `src/`.
+
+**Assumed, to validate with the client:** who signs off at what value bands; which weather vendor they use; where the vulnerability flag lives and who may read it; which wording versions are live across the two books; the written rules for cash settlements.
 
 ## Evals
 
-`npm run evals` reframes the eval as citation faithfulness, not outcome accuracy (the spec's 17-outcome set leaked its own answer key and only the authored cases are runnable). It scores:
-- verdict-class agreement on the authored cases (half credit for abstaining on a borderline case),
-- citation faithfulness (cited DRNs are a subset of those actually returned; never fabricated),
-- a paired-variant regression (the source-unavailable variant of A must flip to cannot_determine),
-- the north-star count.
+The exam is written already: the Ombudsman publishes reasoned decisions. Each golden case holds out its own controlling decision from what the precedent tool can return (`src/mastra/evals/run.ts`), so the reviewer has to reason to the outcome rather than look it up. The holdout only applies to live runs, which is where it means anything.
 
-In live mode each case's controlling DRN is held out from findFosPrecedents, so the model cannot copy its own answer key. The decisive-fact recall scorer runs on a non-Anthropic judge model; without a judge key it prints "skipped (no judge key)" and the deterministic scorers still run.
+Scorers: **verdict agreement** (deterministic) and **citation faithfulness** (every cited decision exists and was returned this run). A third, **decisive-fact recall**, uses a judge from a different model family (`openai/gpt-4.1-mini`) and is wired but has never been run: there was no judge key in the build environment, so it prints "skipped" and the two deterministic scorers carry the result.
 
-## Capability whiteboard
+**North-star metric: wrongly upheld declines.** The review said "defensible" and the Ombudsman would have said otherwise. A second line's worst failure is missing the thing it exists to catch. Tracked separately so it cannot hide inside an average.
 
-Storm-decline review is the wedge, built first. The wider wish list, deferred:
-- cash-settlement review (Case D territory: vulnerability, network vs customer rates, image provenance),
-- the wrong-rulebook path (Case C: comparing the wording at inception vs renewal),
-- TPA SLA-breach detection,
-- complaint root-cause analysis,
-- letter-quality review.
+```
+mode: live model anthropic/claude-sonnet-4-5 | holdout: active
+| case | expected          | actual            | agreement | faithful |
+| A    | disagree_decline  | disagree_decline  | 1         | yes      |
+| B    | agree_decline     | agree_decline     | 1         | yes      |
+| E    | cannot_determine  | cannot_determine  | 1         | yes      |
+verdict-class agreement : 3/3     citation faithfulness : 3/3
+confidence buckets      : high n=2 (2/2) · low n=1 (1/1)
+abstentions             : 1
+NORTH STAR: wrongly upheld declines: 0
+```
 
-## Deliberate omissions, with reasons
+n=3. These are real model runs on a small set: a starting point, not a claim. The merge rule: no prompt or model change ships if the north-star count worsens.
 
-- No memory. The reviewer is stateless so one case cannot poison the next. The audit log is the only history.
-- No RAG or vector DB. Seventeen decisions need a filter, not embeddings.
-- No multi-agent. The escalation targets are people, not agents.
-- No outbound channel. This is the security keystone (see the guards section).
-- No chat interface. This is a review artifact for a handler to sign, not a chatbot.
+## What it deliberately does not do
 
-## Configuration and keys
+- **No memory.** Each review is stateless, so one case cannot contaminate the next, and the audit log is the only history.
+- **No vector database.** Seventeen decisions need a filter, not embeddings. At thousands, semantic search becomes a tool the agent can call.
+- **No multi-agent.** The escalation targets (counter-fraud, the technical lead) are people.
+- **No outbound channel.** The agent has private data and reads untrusted text (a claimant could write "ignore your instructions" in a narrative; an adjuster's report is third-party content). So the third leg of the trifecta is removed: it cannot email, browse or send. Its only writes are a note and an audit row.
+- **No confidence scores.** Models are better at words than numbers. `high / medium / low` with named drivers is what a handler can act on; the numbers live in the eval.
 
-Copy `.env.example` to `.env`. Command-to-key table:
+Guards are named after what they stop: *injection guard* and *privacy guard* on narratives (regex, best-effort, and genuinely weak on their own; the no-outbound rule is what actually holds); *precedent guard* (every cited decision must have been returned by the tool this run); *scope guard* (the verdict is one of five review values, never an action).
 
-| command | keys | notes |
-| --- | --- | --- |
-| `npm run doctor` | none | preflight |
-| `npm run demo` | none (golden) or `ANTHROPIC_API_KEY` (live) | fires Case A |
-| `npm run serve` | none (golden) or `ANTHROPIC_API_KEY` (live) | UI on `PORT` (default 8787) |
-| `npm run dev` | none (golden) or `ANTHROPIC_API_KEY` (live) | Mastra Studio on 4111 |
-| `npm run evals` | `ANTHROPIC_API_KEY` for live behaviour, plus a judge key for decisive-fact recall | degrades gracefully |
-| `npm run golden A` | `ANTHROPIC_API_KEY` | re-records `golden/caseA.json` from a live call |
+## Where it would plug in
 
-The agent and verdict stay in the Anthropic family so `dev`, `serve` and `demo` need only one key. The eval judge is deliberately a different family (OpenAI) so the review is not graded by its own model. Model IDs are Mastra provider/model strings; confirm the exact suffix against the account in use (the default `anthropic/claude-sonnet-4-5` is overridable via `AGENT_MODEL`).
+Aviva's home claims run on Guidewire ClaimCenter, moved to Guidewire Cloud in 2026; Direct Line's claims consolidate onto the same platform in H1 2027. The reviewer listens for a "recommend decline" activity, writes a note and a task back, and logs to audit. It is an API conversation, not a re-platform. The model call goes through the enterprise endpoint with names removed; handlers approve under their own login.
 
-`USE_GOLDEN=1` forces the cached run even with a key present (deterministic demo); `USE_GOLDEN=0` forces a live call.
+## What I'd test next
 
-## Restart-resume (the resilience story)
+Silent mode on ~500 historic declinatures with known outcomes: agreement, harmful-error rate, abstention rate. Then live on one outsourced adjuster's recommendations with a technical lead reviewing every flag. Go/no-go on the north star and on whether handlers keep using it, not on volume.
 
-Start Case A in the UI, reach the suspended state, kill the server, restart it, then approve or override. The run completes. The resume rehydrates the run from LibSQL by runId (`createRun({ runId })`), never from an in-memory handle, so it survives the restart. This is verified by `scripts/spike/` and by `src/mastra/workflow.test.ts`.
+## Deferred from this build
 
-## Stack and versions
+Cut to keep three hours honest: **Case C** (52 mph gusts declined under a hard-threshold wording superseded at renewal); **Case D** (cash settlement offered to a customer flagged vulnerable, with a photo of uncertain provenance; the reviewer stops and escalates); image provenance; live streaming of tool calls; the cross-family judge run; the diagrams and screen recording. Case D carries the responsible-AI story and would be the first thing back in.
 
-Node 22+, TypeScript, Mastra. Pinned in `package.json` and `package-lock.json`: `@mastra/core` 1.67.0, `mastra` (CLI) 1.30.0, `@mastra/libsql` 1.23.0, `@mastra/evals` 1.10.2, `@mastra/observability` 1.17.8, `@mastra/loggers` 1.3.2, `zod` 4.6.5, `hono` 4.13.8. All Mastra API signatures used here (createTool `(inputData, context)`, createStep single-object execute, structuredOutput, LibSQLStore, createRun/resume) were verified against the installed type definitions.
+## How the recordings were made
 
-Note on sequential tool calls: the reviewer prompt instructs one-tool-at-a-time, and the causal chain relies on it. Disabling parallel tool calls at the model level is provider-specific (`providerOptions`) and is not wired here; the prompt is the control.
-
-## Assumptions to validate with the client
-
-- Sign-off limits: which verdicts a handler may accept without a second signature.
-- The weather data vendor and its station coverage and latency.
-- Where the vulnerability flag lives, and who maintains it.
-- Which wording versions are actually in force, and the renewal-versioning rules.
-- The cash-settlement fairness rules and the customer-rate reference the business uses.
+`golden/case*.json` are recordings of live runs against `anthropic/claude-sonnet-4-5`, produced with `npm run golden <case>` on 15 Sep 2026, including the tool-call sequence. They exist so the demo never depends on a live call landing. The recordings carry the model id and a timestamp but not the run id. A second live run of each case is in the eval output; verdict and confidence matched, cited decisions varied.
 
 ## Layout
 
 ```
-data/            fixtures: wordings, weather, reports, customers, precedents (17), cases (A/B/E)
-golden/          cached canonical runs (caseA/B/E.json) so the demo needs no keys
-src/mastra/
-  agents/reviewer.ts     the reviewer agent and its system prompt
-  tools/                 5 tools, each returns {status:'unavailable'} instead of throwing
-  guards/                injection, privacy, precedent, scope
-  schemas/review.ts      the review zod schema
-  workflows/stormReview  prefetch -> review -> guard -> gate -> record
-  evals/                 fixtures, scorers, run.ts
-  lib/                   loader, context builder, audit, paths, model, golden
-src/server.ts    Hono server: /cases, /run/:caseId, /run/:runId, /resume/:runId, /audit
-ui/index.html    single page, no framework
-scripts/         doctor, demo, record-golden, spike/ (the restart-resume verification)
-audit/           append-only log.jsonl and notes/ (created at runtime)
+src/mastra/        agent, tools, workflow, schema, guards, evals
+data/              wordings · weather · reports · customers · precedents · cases
+golden/            recorded runs (real model output)
+audit/             append-only log written by the record step
+ui/                the review screen
 ```
+
+## Built with
+
+[Mastra](https://mastra.ai) (agents, workflows with suspend/resume, scorers, tracing), TypeScript, LibSQL, Hono. Claude Code was used for the build, with the scope, the domain rules and every cut decided by hand. The research is in the accompanying document.

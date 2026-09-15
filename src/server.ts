@@ -167,7 +167,9 @@ app.get('/audit', (c) => {
   return c.json({ entries: entries.slice(-25).reverse() });
 });
 
-const port = Number(process.env.PORT ?? 8787);
+// UI_PORT, not PORT: the Mastra CLI also reads PORT, so sharing it made
+// `mastra dev` bind the UI port and crash with EADDRINUSE when serve was running.
+const port = Number(process.env.UI_PORT ?? 8787);
 serve({ fetch: app.fetch, port });
 const mode = shouldUseGolden() ? 'golden-cache (zero-key)' : 'live model';
 console.log(`storm-review UI on http://localhost:${port}  [mode: ${mode}]`);
